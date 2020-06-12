@@ -1,3 +1,1 @@
-#! /bin/sh
-
 nohup python3 /home/pi/Project/TemperatureRecorder/TemperatureRecorder.py &
