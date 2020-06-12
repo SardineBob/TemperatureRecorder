@@ -11,7 +11,8 @@ class Temperature():
 
     # 初始化，主要是定義一些路徑
     def __init__(self):
-        self.__devicesPath = "D://13.PythonProject/sys/bus/w1/devices/"
+        #self.__devicesPath = "D://13.PythonProject/sys/bus/w1/devices/"
+        self.__devicesPath = "/sys/bus/w1/devices/"
         self.__devicesFloder = glob.glob(self.__devicesPath + '28*')[0]
         self.__devicesFile = self.__devicesFloder + '/w1_slave'
 
