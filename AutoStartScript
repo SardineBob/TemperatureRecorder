@@ -28,7 +28,7 @@ case "$1" in
     start)
         echo "Start open temperature-monitor"
         cd /home/pi/Project/TemperatureRecorder
-        python3 TemperatureRecorder.py > log
+        python3 TemperatureRecorder.py & 
         echo "Start Finish"
         ;;
     stop)
@@ -36,5 +36,7 @@ case "$1" in
         killall -9 TemperatureRecorder.py
         echo "Stop Finish"
         ;;
+    *)
+        echo "command is start|stop|restart"
 esac
 exit 0
