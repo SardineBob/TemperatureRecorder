@@ -1,0 +1,1 @@
+nohup /home/pi/Project/TemperatureRecorder/TemperatureRecorder.py &
