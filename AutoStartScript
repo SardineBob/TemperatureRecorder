@@ -1,0 +1,42 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:          temperature-monitor
+# Required-Start:    $syslog $network
+# Required-Stop:     $syslog $network
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts the temperature-monitor process
+# Description:       starts temperature-monitor using start-stop-daemon
+### END INIT INFO
+
+# /etc/init.d/temperature-monitor
+
+# 1.修改檔案為可執行
+#   $ sudo chmod 755 /etc/init.d/temperature-monitor
+# 2.設定raspberry pi 開機即啟動
+#   $ sudo update-rc.d temperature-monitor defaults 99
+# 3.移除開機啟動動作
+#   $ sudo update-rc.d temperature-monitor remove
+# 4.如果init.d裡面的script有修改的話
+#   $ systemctl daemon-reload
+# 5.可使用指令啟動、停止服務
+#   $ sudo service temperature-monitor start
+#   $ sudo service temperature-monitor stop
+
+case "$1" in
+    start)
+        echo "Start open temperature-monitor"
+        cd /home/pi/Project/TemperatureRecorder/dist
+        ./TemperatureRecorder & 
+        echo "Start Finish"
+        ;;
+    stop)
+        echo "Stop temperature-monitor..."
+        killall -9 TemperatureReco
+        echo "Stop Finish"
+        ;;
+    *)
+        echo "command is start|stop|restart"
+esac
+exit 0

@@ -1,3 +1,4 @@
+# coding=UTF-8
 import time
 from utilset.ConfigUtil import ConfigUtil
 from component.Temperature import Temperature

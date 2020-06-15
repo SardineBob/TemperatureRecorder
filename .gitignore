@@ -25,4 +25,6 @@ yarn-error.log*
 */__pycache__
 
 /CameraRecord
-dbfile/AbnormalRecord.db
+dbfile
+dist
+*.spec
