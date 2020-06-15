@@ -27,13 +27,13 @@
 case "$1" in
     start)
         echo "Start open temperature-monitor"
-        cd /home/pi/Project/TemperatureRecorder
-        python3 TemperatureRecorder.py & 
+        cd /home/pi/Project/TemperatureRecorder/dist
+        ./TemperatureRecorder.py & 
         echo "Start Finish"
         ;;
     stop)
         echo "Stop temperature-monitor..."
-        killall -9 TemperatureRecorder.py
+        killall -9 TemperatureReco
         echo "Stop Finish"
         ;;
     *)
