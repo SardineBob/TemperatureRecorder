@@ -20,3 +20,50 @@ $ nohup your-command &
 $ lsof | grep nohup
 ```
 - 要停止nohup的程序，一樣kill PID即可
+
+# 在linux下，建立開機自動執行程序動作
+- 建立scipt檔案放在/etc/init.d/路徑下
+```
+$ cd /etc/init.d
+$ touch your-autoStartScript
+```
+- 撰寫指令執行的腳本，可參考AutoStartScript
+```
+$ vim your-autoStartScript
+```
+- 把腳本檔案權限，調整為可執行檔
+```
+$ sudo chmod 755 your-autoStartScript
+```
+- 註冊開機自動執行機制
+```
+$ sudo update-rc.d your-autoStartScript defaults 99
+```
+- 如果要移除開機自動執行動作
+```
+$ sudo update-rc.d your-autoStartScript remove
+```
+- 如果init.d裡面的script有修改的話，要執行以下指令
+```
+$ systemctl daemon-reload
+```
+- 可使用指令啟動、停止服務
+```
+$ sudo service your-autoStartScript start
+$ sudo service your-autoStartScript stop
+```
+- 如果你的腳本是執行一個sh檔案，記得被執行的SH檔也要把檔案權限設定為755執行檔
+- 重開機看有沒有效果
+```
+$ sudo reboot
+```
+
+# 安裝pyinstaller將python打包成執行檔
+```
+$ pip install pyinstaller
+```
+- 如果是在Raspberry等Linux環境，要用pip3去install pyinstaller，包出來才會跑python3的程式
+- 打包執行檔
+```
+$ pyinstaller -F your-root-python.py
+```
