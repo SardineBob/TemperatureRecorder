@@ -28,7 +28,7 @@ case "$1" in
     start)
         echo "Start open temperature-monitor"
         cd /home/pi/Project/TemperatureRecorder/dist
-        ./TemperatureRecorder.py & 
+        ./TemperatureRecorder & 
         echo "Start Finish"
         ;;
     stop)
