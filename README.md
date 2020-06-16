@@ -68,3 +68,8 @@ $ pip install pyinstaller
 ```
 $ pyinstaller -F your-root-python.py
 ```
+
+# 安裝flask，提供webAPI讓外界讀取溫度數據
+```
+$ pip install flask
+```
