@@ -73,3 +73,11 @@ $ pyinstaller -F your-root-python.py
 ```
 $ pip install flask
 ```
+
+# 同時讀取多組w1 interface的溫控模組
+- 讀取一組w1 interface時，查看/boot/config.txt，會看到只有一行dtoverlay=w1-gpio
+- 如果要支援多組，則要編輯這個檔案，修改為以下內容
+```
+dtoverlay=w1-gpio,gpiopin=4
+dtoverlay=w1-gpio,gpiopin=17
+```
