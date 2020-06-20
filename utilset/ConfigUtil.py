@@ -9,6 +9,7 @@ class ConfigUtil():
 
     __filePath = 'config.ini'
     TempCaptureTime = None
+    Thermometer = None
 
     def __init__(self):
         # 判斷設定檔是否存在
@@ -20,3 +21,4 @@ class ConfigUtil():
         config.read(self.__filePath, encoding="UTF-8")
         # 讀取擷取溫度循環時間
         self.TempCaptureTime = json.loads(config["SystemConfig"]["TempCaptureTime"])
+        self.Thermometer = json.loads(config["SystemConfig"]["Thermometer"])
