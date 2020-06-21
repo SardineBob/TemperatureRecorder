@@ -81,3 +81,9 @@ $ pip install flask
 dtoverlay=w1-gpio,gpiopin=4
 dtoverlay=w1-gpio,gpiopin=17
 ```
+
+# 開啟使用enc28j60網路模組
+- 根據針腳對應圖連接到raspberrypi gpio後，編輯/boot/config.txt的檔案，在最後面加上以下內容，即可啟動enc28j60網路模組
+```
+dtoverlay=enc28j60
+```
