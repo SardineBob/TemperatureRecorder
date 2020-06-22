@@ -41,7 +41,11 @@ class Temperature():
 
     # 將溫度寫入DB中
     def writeTemperature(self, temperature):
-        self.__temperatureUtil.writeTemperature(temperature)
+        self.__temperatureUtil.writeTemperature({
+            'id': self.__id,
+            'name': self.__name,
+            'temperature': temperature
+        })
 
     # 取得該溫控棒設定的名稱
     def getName(self):

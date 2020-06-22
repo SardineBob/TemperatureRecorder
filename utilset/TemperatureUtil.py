@@ -15,11 +15,11 @@ class TemperatureUtil():
         self.__sqlLiteUtil = SqlLiteUtil()
 
     # 將溫度寫入DB
-    def writeTemperature(self, temperature):
+    def writeTemperature(self, para):
         # 先檢查dbfile是否存在
         self.__checkDB()
         # 將溫度insert到DB
-        self.__insertTemperature({'temperature': temperature})
+        self.__insertTemperature(para)
 
     # 檢查今年的DB是否已產生
     def __checkDB(self):
@@ -36,9 +36,11 @@ class TemperatureUtil():
     # 產生DB檔案
     def __createDB(self):
         command = "CREATE TABLE RecordList(\
+            ID INTEGER NOT NULL,\
+            Name Text NOT NULL,\
             RecodeTime Text NOT NULL,\
             Temperature REAL NOT NULL,\
-            PRIMARY KEY (RecodeTime,Temperature)\
+            PRIMARY KEY (ID, RecodeTime)\
         )"
         # do create db
         self.__sqlLiteUtil.Execute(self.__dbFilePath, command, [])
@@ -46,11 +48,15 @@ class TemperatureUtil():
     # insert溫度資料
     def __insertTemperature(self, para):
         # 取出相關Insert資料
+        id = para['id']
+        name = para['name']
         temperature = para['temperature']
         now = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
         # insert 指令
-        command = " INSERT INTO RecordList VALUES (:recordTime, :temperature) "
+        command = " INSERT INTO RecordList VALUES (:id, :name, :recordTime, :temperature) "
         parameter = {
+            'id': id,
+            'name': name,
             'recordTime': now,
             'temperature': temperature
         }

@@ -4,8 +4,6 @@ from utilset.ConfigUtil import ConfigUtil
 from component.Temperature import Temperature
 from component.WebAPI import WebAPI
 
-# 建立Web微服務
-WebAPI()
 # 取得設定檔的值
 TempCaptureTime = ConfigUtil().TempCaptureTime
 Thermometer = ConfigUtil().Thermometer
@@ -13,6 +11,8 @@ Thermometer = ConfigUtil().Thermometer
 temperature = []
 for item in Thermometer:
     temperature.append(Temperature(item))
+# 建立Web微服務
+WebAPI({'temperature': temperature})
 # 開始無盡的根據設定循環秒數去擷取溫度數據並寫到SQLLite
 active = True
 print('開始紀錄溫度(每' + str(TempCaptureTime) + '秒)')

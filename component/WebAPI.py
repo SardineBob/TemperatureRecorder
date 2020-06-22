@@ -8,8 +8,11 @@ import threading
 class WebAPI():
 
     __port = 9453
+    __temperature = None
 
-    def __init__(self):
+    def __init__(self, para):
+        # 取得需使用的參數或物件
+        self.__temperature = para['temperature']
         # 建立執行序跑WebAPI服務
         task = threading.Thread(target=self.__start)
         task.setDaemon(True)
@@ -32,7 +35,10 @@ class WebAPI():
 
     # 取得目前溫度
     def getNowTemperature(self):
-        return "目前時間：" + datetime.now().strftime('%Y/%m/%d %H:%M:%S') + "，溫度攝氏：" + str(Temperature().getTemperature()) + "度"
+        msg = ''
+        for item in self.__temperature:
+            msg += "目前時間：" + datetime.now().strftime('%Y/%m/%d %H:%M:%S') + "，設備名稱：" + item.getName() + "，溫度攝氏：" + str(item.getTemperature()) + "度<br/>"
+        return msg
 
     # 取得歷史溫度資料
     def getHistoryTemp(self, reqJson):
