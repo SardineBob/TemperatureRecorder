@@ -3,6 +3,7 @@ from component.Temperature import Temperature
 from utilset.TemperatureUtil import TemperatureUtil
 from datetime import datetime
 import threading
+import json
 
 
 class WebAPI():
@@ -35,23 +36,17 @@ class WebAPI():
 
     # 取得目前溫度
     def getNowTemperature(self):
-        msg = ''
+        result = []
         for item in self.__temperature:
-            msg += "目前時間：" + datetime.now().strftime('%Y/%m/%d %H:%M:%S') + "，設備名稱：" + item.getName() + "，溫度攝氏：" + str(item.getTemperature()) + "度<br/>"
-        return msg
+            result.append({
+                'now': datetime.now().strftime('%Y/%m/%d %H:%M:%S'),
+                'name': item.getName(),
+                'temperature': item.getTemperature()
+            })
+        return json.dumps(result, ensure_ascii=False)
 
     # 取得歷史溫度資料
     def getHistoryTemp(self, reqJson):
-        # 先擷取request過來的參數
-        date = reqJson['date']
-        # 根據這個日期取得整個日期的溫度數據資料
-        data = TemperatureUtil().selectTemperature(date)
-        # 將array(tuple)的資料轉成json
-        result = []
-        for item in data:
-            result.append({
-                'time': item[0],
-                'temp': item[1]
-            })
-        # response data
-        return str(result)
+        # 根據查詢條件取得符合的溫度數據資料
+        data = TemperatureUtil().selectTemperature(reqJson)
+        return json.dumps(data, ensure_ascii=False)
