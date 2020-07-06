@@ -113,3 +113,8 @@ $ sudo apt-get install libtiff5
 ```
 $ sudo apt-get install python3-rpi.gpio
 ```
+
+# 換了Raspberrypi zero，裝OS Lite，有些python套件要自己裝
+```
+$ sudo apt-get install python3-tk
+```
