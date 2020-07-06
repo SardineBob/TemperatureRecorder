@@ -87,3 +87,29 @@ dtoverlay=w1-gpio,gpiopin=17
 ```
 dtoverlay=enc28j60
 ```
+
+# 把溫度數值，顯示載OLED模組
+- 首先要先到raspi-config開啟i2C介面
+- 安裝i2c-tool，可以用來偵測連接到樹梅派上面的i2C裝置
+```
+$ sudo apt-get install i2c-tools
+```
+- i2cdetect -l 可以列舉連到樹梅派的裝置
+- i2cdetect -y 1 則是顯示第一個裝置的記憶體位址
+- 安裝第三方寫好的OLED驅動python套件由Adafruit公司開發開源的(pip)
+```
+$ pip3 install Adafruit-SSD1306
+```
+- 安裝python繪圖套件(pip)
+```
+$ pip3 install Pillow
+```
+- 如果出現Pillow: libopenjp2.so.7: cannot open shared object file: No such file or directory，就安裝libopenjp2-7試試看
+```
+$ sudo apt-get install libopenjp2-7
+$ sudo apt-get install libtiff5
+```
+- 安裝RPi.GPIO
+```
+$ sudo apt-get install python3-rpi.gpio
+```
