@@ -48,6 +48,9 @@ class OLEDPrinter():
 
     # 繪製呈現在OLED螢幕上的影像
     def __draw(self, tempCollect):
+        # clear image
+        self.__imageDraw((0, 0, self.__width, self.__height), fill=0)
+        # 根據連接的溫控棒數量，決定一格的高多少
         tempCnt = len(tempCollect)
         gridHeight = self.__height / tempCnt
         # draw Info. print to OLED
