@@ -1,4 +1,4 @@
-# Version. 0.1.0
+# Version. 0.2.0
 # 在linux下，背景執行指令
 - 在指令的後面加上&的符號，就可以背景執行
 ```
@@ -67,4 +67,54 @@ $ pip install pyinstaller
 - 打包執行檔
 ```
 $ pyinstaller -F your-root-python.py
+```
+
+# 安裝flask，提供webAPI讓外界讀取溫度數據
+```
+$ pip install flask
+```
+
+# 同時讀取多組w1 interface的溫控模組
+- 讀取一組w1 interface時，查看/boot/config.txt，會看到只有一行dtoverlay=w1-gpio
+- 如果要支援多組，則要編輯這個檔案，修改為以下內容
+```
+dtoverlay=w1-gpio,gpiopin=4
+dtoverlay=w1-gpio,gpiopin=17
+```
+
+# 開啟使用enc28j60網路模組
+- 根據針腳對應圖連接到raspberrypi gpio後，編輯/boot/config.txt的檔案，在最後面加上以下內容，即可啟動enc28j60網路模組
+```
+dtoverlay=enc28j60
+```
+
+# 把溫度數值，顯示載OLED模組
+- 首先要先到raspi-config開啟i2C介面
+- 安裝i2c-tool，可以用來偵測連接到樹梅派上面的i2C裝置
+```
+$ sudo apt-get install i2c-tools
+```
+- i2cdetect -l 可以列舉連到樹梅派的裝置
+- i2cdetect -y 1 則是顯示第一個裝置的記憶體位址
+- 安裝第三方寫好的OLED驅動python套件由Adafruit公司開發開源的(pip)
+```
+$ pip3 install Adafruit-SSD1306
+```
+- 安裝python繪圖套件(pip)
+```
+$ pip3 install Pillow
+```
+- 如果出現Pillow: libopenjp2.so.7: cannot open shared object file: No such file or directory，就安裝libopenjp2-7試試看
+```
+$ sudo apt-get install libopenjp2-7
+$ sudo apt-get install libtiff5
+```
+- 安裝RPi.GPIO
+```
+$ sudo apt-get install python3-rpi.gpio
+```
+
+# 換了Raspberrypi zero，裝OS Lite，有些python套件要自己裝
+```
+$ sudo apt-get install python3-tk
 ```
