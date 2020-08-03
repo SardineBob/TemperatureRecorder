@@ -118,3 +118,13 @@ $ sudo apt-get install python3-rpi.gpio
 ```
 $ sudo apt-get install python3-tk
 ```
+
+# 換3.5吋LCD螢幕(MPI3508)，直接走window的介面
+- 這款MPI3508，透過GPIO針腳與HDMI連接埠，達到觸控螢幕的效果，初次使用前需要執行安裝
+```
+sudo rm -rf LCD-show
+git clone https://github.com/goodtft/LCD-show.git
+chmod -R 755 LCD-show
+cd LCD-show/
+sudo ./MPI3508-show
+```
