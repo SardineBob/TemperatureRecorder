@@ -122,9 +122,24 @@ $ sudo apt-get install python3-tk
 # 換3.5吋LCD螢幕(MPI3508)，直接走window的介面
 - 這款MPI3508，透過GPIO針腳與HDMI連接埠，達到觸控螢幕的效果，初次使用前需要執行安裝
 ```
-sudo rm -rf LCD-show
-git clone https://github.com/goodtft/LCD-show.git
-chmod -R 755 LCD-show
-cd LCD-show/
-sudo ./MPI3508-show
+$ sudo rm -rf LCD-show
+$ git clone https://github.com/goodtft/LCD-show.git
+$ chmod -R 755 LCD-show
+$ cd LCD-show/
+$ sudo ./MPI3508-show
 ```
+
+# 走window介面，開機時自動開啟溫控的window form介面
+- 將寫好的python tkinter window form 使用pyinstaller編譯成可執行檔案
+- 編輯LXDE-pi裡面的autostart檔案，把執行檔路徑放進去，那因為這個地方全域有效，記得加sudo
+```
+$ sudo vim /etc/xdg/lxsession/LXDE-pi/autostart
+```
+- 接著在最後一行加上編譯好的可執行檔案
+```
+@lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splashy
+/home/pi/Project/TemperatureRecorder/dist/TemperatureRecorder
+```
+- 重開機後，視窗就會出現了
