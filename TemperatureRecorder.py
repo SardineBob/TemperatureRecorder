@@ -1,10 +1,12 @@
 # coding=UTF-8
 import time
 from utilset.ConfigUtil import ConfigUtil
+from component.MainWindow import MainWindow
 from component.Temperature import Temperature
 from component.WebAPI import WebAPI
-from component.OLEDPrinter import OLEDPrinter
 
+# 開啟溫度監控顯示視窗
+MainWindow()
 # 取得設定檔的值
 TempCaptureTime = ConfigUtil().TempCaptureTime
 Thermometer = ConfigUtil().Thermometer
@@ -12,7 +14,6 @@ Thermometer = ConfigUtil().Thermometer
 temperature = []
 for item in Thermometer:
     temperature.append(Temperature(item))
-oledPrinter = OLEDPrinter()
 # 建立Web微服務
 WebAPI({'temperature': temperature})
 # 開始無盡的根據設定循環秒數去擷取溫度數據並寫到SQLLite
@@ -26,8 +27,6 @@ try:
             tempCollect.append((item.getName(), temp))
             item.writeTemperature(temp)
             print('設備名稱：' + str(item.getName()) + '，目前溫度：' + str(temp))
-        # 輸出到OLED螢幕
-        oledPrinter.print(tempCollect)
         time.sleep(TempCaptureTime)
 except KeyboardInterrupt:
     active = False
