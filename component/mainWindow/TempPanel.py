@@ -8,7 +8,6 @@ class TempPanel():
 
     __TempPanel = None
     __TempInfo = []
-    __fontPath = './resource/NotoSansTC-Medium.otf'
 
     # 初始化
     def __init__(self, mainWindow):
@@ -27,5 +26,4 @@ class TempPanel():
         TempInfo.configure(bg='#ff0000', highlightbackground='#000000', highlightthickness=1)
         TempInfo.grid(row=0, column=0, sticky='EWNS')
         # 溫度計編號
-        fontStyle = tkFont.Font(family=self.__fontPath, size=12)
-        tk.Label(TempInfo, text="溫度計編號：A01", font=fontStyle).pack(fill=tk.BOTH)
+        tk.Label(TempInfo, text="溫度計編號：A01", font=("NotoSansTC-Medium", 12)).pack(fill=tk.BOTH)
