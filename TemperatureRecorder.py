@@ -1,7 +1,7 @@
 # coding=UTF-8
 import time
 from utilset.ConfigUtil import ConfigUtil
-from component.MainWindow import MainWindow
+from component.mainWindow.MainWindow import MainWindow
 from component.Temperature import Temperature
 from component.WebAPI import WebAPI
 

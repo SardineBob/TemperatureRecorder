@@ -1,7 +1,10 @@
 # coding=UTF-8
 import tkinter as tk
+from component.mainWindow.MenuBar import MenuBar
+from component.mainWindow.TempPanel import TempPanel
 
 
+# 主要視窗物件
 class MainWindow():
 
     __width = 480
@@ -21,15 +24,16 @@ class MainWindow():
         self.__window = tk.Tk()
         self.__window.title("溫度監控(ver.0.1.0)")
         self.__window.geometry("%dx%d" % (self.__width, self.__height))
+        self.__window.configure(bg='#000000')
         self.__window.minsize(self.__width, self.__height)
         self.__window.maxsize(self.__width, self.__height)
         self.__window.attributes("-toolwindow", True)
         self.__window.protocol("WM_DELETE_WINDOW", False)  # 不允許使用者離開視窗
-        # 生成離開按鈕
-        tk.Button(self.__window, text="Exit", command=self.__quitEvent).pack(anchor=tk.NE)
-
-    # 離開按鈕事件
-    def __quitEvent(self):
-        self.__window.destroy()
-        self.__window = None
-        exit()
+        # 設定版面與配置比例
+        self.__window.grid_columnconfigure(0, weight=1)
+        self.__window.grid_rowconfigure(0, weight=1)
+        self.__window.grid_rowconfigure(1, weight=20)
+        # 載入功能列表
+        MenuBar(self.__window)
+        # 載入溫度監視版面
+        TempPanel(self.__window)
