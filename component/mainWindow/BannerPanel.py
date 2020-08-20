@@ -13,7 +13,6 @@ class BannerPanel():
     __deviceName = None
     __bannerPanel = None
     __timeLabel = None
-    __renewTimeTask = None
     # style 屬性
     __bannerHeight = 48
     __iconWH = (48, 48)
@@ -78,9 +77,9 @@ class BannerPanel():
         self.__timeLabel.config(fg="white", bg="black", font=("NotoSansTC-Medium", 10))
         self.__timeLabel.pack(side=tk.RIGHT, anchor=tk.N)
         # 建立執行緒，用以更新時間
-        self.__renewTimeTask = threading.Thread(target=self.__renewTime)
-        self.__renewTimeTask.setDaemon(True)
-        self.__renewTimeTask.start()
+        task = threading.Thread(target=self.__renewTime)
+        task.setDaemon(True)
+        task.start()
 
     # 更新時間方法
     def __renewTime(self):
