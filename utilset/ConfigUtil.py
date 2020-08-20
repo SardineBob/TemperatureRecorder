@@ -1,3 +1,4 @@
+# coding=UTF-8
 import os
 from tkinter import messagebox
 import configparser
@@ -8,6 +9,8 @@ import json
 class ConfigUtil():
 
     __filePath = 'config.ini'
+    DeviceID = None
+    DeviceName = None
     TempCaptureTime = None
     Thermometer = None
 
@@ -19,6 +22,8 @@ class ConfigUtil():
         # 讀取設定檔
         config = configparser.ConfigParser()
         config.read(self.__filePath, encoding="UTF-8")
-        # 讀取擷取溫度循環時間
+        # 讀取溫控設備設定
+        self.DeviceID = json.loads(config["SystemConfig"]["DeviceID"])
+        self.DeviceName = json.loads(config["SystemConfig"]["DeviceName"])
         self.TempCaptureTime = json.loads(config["SystemConfig"]["TempCaptureTime"])
         self.Thermometer = json.loads(config["SystemConfig"]["Thermometer"])
