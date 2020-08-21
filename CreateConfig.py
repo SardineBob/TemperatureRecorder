@@ -11,9 +11,9 @@ config['SystemConfig'] = {
     'DeviceName': json.dumps("墾丁分店", ensure_ascii=False),
     'TempCaptureTime': json.dumps(6),  # 擷取溫度循環時間，每N秒，讀取溫度，並寫入溫度紀錄
     'Thermometer': json.dumps([
-        {'id': 1, 'name': '左邊冷凍櫃', 'serial': '28-041694bd1cff'},
-        {'id': 2, 'name': '中間冷凍櫃', 'serial': '28-041694bd1cfg'},
-        {'id': 3, 'name': '右邊冷凍櫃', 'serial': '28-041694bd1cfh'},
+        {'id': 'A01', 'name': '左邊冷凍櫃', 'serial': '28-041694bd1cff'},
+        {'id': 'A02', 'name': '中間冷凍櫃', 'serial': '28-041694bd1cfg'},
+        {'id': 'A03', 'name': '右邊冷凍櫃', 'serial': '28-041694bd1cfh'},
     ], ensure_ascii=False),  # 溫度計硬體設備序號與名稱
 }
 
