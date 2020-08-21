@@ -3,7 +3,6 @@ import tkinter as tk
 import threading
 import time
 from PIL import Image, ImageTk
-from component.mainWindow.WindowStyle import WinStyle
 
 
 # 標頭列表

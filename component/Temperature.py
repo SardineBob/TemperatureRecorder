@@ -47,6 +47,10 @@ class Temperature():
             'temperature': temperature
         })
 
+    # 取得該溫控棒設定的代碼
+    def getID(self):
+        return self.__id
+
     # 取得該溫控棒設定的名稱
     def getName(self):
         return self.__name

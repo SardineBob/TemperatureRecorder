@@ -1,29 +1,107 @@
 # coding=UTF-8
 import tkinter as tk
 import tkinter.font as tkFont
+import threading
+import time
+from component.Temperature import Temperature
 
 
 # 功能列表
 class TempPanel():
 
+    __mainWindow = None
+    __thermometers = []  # 多筆溫度計物件
+    __tempLinkList = []  # 連結對應的溫度計物件與溫度顯示介面，供執行緒抓取溫度後，呈現於顯示介面
+    __tempCaptureTime = None  # 擷取溫度頻率秒數
     __TempPanel = None
-    __TempInfo = []
 
     # 初始化
-    def __init__(self, mainWindow):
-        # 建立一個容器，並建構在root主容器(也就是視窗)中，這個容器內的組件位置配置，就可以自行定義
-        self.__TempPanel = tk.Frame(mainWindow)
-        self.__TempPanel.configure(bg='#00ff00')
-        # 這是基於root主容器的位置配置
-        self.__TempPanel.grid(row=1, column=0, sticky='EWNS')
-        # 根據連接的溫度計，配置版面(最多支援三支溫度計)
-        self.__TempPanel.grid_columnconfigure(0, weight=1)
-        self.__TempPanel.grid_columnconfigure(1, weight=1)
-        self.__TempPanel.grid_columnconfigure(2, weight=1)
-        self.__TempPanel.grid_rowconfigure(0, weight=1)
-        # 溫度資訊版面
-        TempInfo = tk.Frame(self.__TempPanel)
-        TempInfo.configure(bg='#ff0000', highlightbackground='#000000', highlightthickness=1)
-        TempInfo.grid(row=0, column=0, sticky='EWNS')
-        # 溫度計編號
-        tk.Label(TempInfo, text="溫度計編號：A01", font=("NotoSansTC-Medium", 12)).pack(fill=tk.BOTH)
+    def __init__(self, para):
+        # 讀取參數
+        self.__loadParameter(para)
+        # 生成Temp Panel
+        self.__genTempPanel()
+        # 建立執行緒，更新溫度數值
+        self.__genRenewTempThread()
+
+    # 讀取參數值方法
+    def __loadParameter(self, para):
+        self.__mainWindow = para["mainWindow"]
+        self.__tempCaptureTime = para["tempCaptureTime"]
+        # 根據溫度計支數設定，逐一實體化溫度物件
+        thermometers = para["thermometers"]
+        for item in thermometers:
+            self.__thermometers.append(Temperature(item))
+
+    # 生成Temp Panel
+    def __genTempPanel(self):
+        # 生成溫度面板的容器框架
+        self.__TempPanel = tk.Frame(self.__mainWindow)
+        self.__TempPanel.config(bg="black")
+        self.__TempPanel.pack(fill=tk.BOTH, expand=True)
+        # 根據連接的溫度計，逐一生成溫度計資訊面板
+        for tempItem in self.__thermometers:
+            self.__genTempInfoPanel(tempItem)
+
+    # 生成溫度計面板
+    def __genTempInfoPanel(self, tempEntity):
+        # 生成溫度資訊的容器框架
+        tempInfoPanel = tk.Frame(self.__TempPanel)
+        tempInfoPanel.config(bg="black")
+        tempInfoPanel.config(highlightbackground="white", highlightthickness=1)  # 設定border
+        tempInfoPanel.pack(fill=tk.BOTH, side=tk.LEFT, expand=True)
+        # 生成溫度計編號與名稱
+        self.__genTempTitle({
+            "panel": tempInfoPanel,
+            "tempID": tempEntity.getID(),
+            "tempName": tempEntity.getName(),
+        })
+        # 生成溫度資訊
+        self.__genTempLabel({
+            "panel": tempInfoPanel,
+            "tempEntity": tempEntity
+        })
+
+    # 生成溫度計編號與名稱
+    def __genTempTitle(self, para):
+        panel = para["panel"]
+        tempID = para["tempID"]
+        tempName = para["tempName"]
+        # 生成溫度計標題
+        tempTitle = tk.Label(panel)
+        tempTitle.config(text=str(tempID) + "\n" + tempName, fg="white", bg="black", font=("NotoSansTC-Medium", 18))
+        tempTitle.pack(fill=tk.BOTH, side=tk.TOP)
+
+    # 生成溫度資訊
+    def __genTempLabel(self, para):
+        panel = para["panel"]
+        tempEntity = para["tempEntity"]
+        # 生成溫度計溫度顯示資訊
+        tempLabel = tk.Label(panel)
+        tempLabel.config(fg="white", bg="black", font=("NotoSansTC-Medium", 40))
+        tempLabel.pack(fill=tk.BOTH, side=tk.BOTTOM, expand=True)
+        # 連結溫度資訊界面與溫度計物件
+        self.__tempLinkList.append({
+            "label": tempLabel,
+            "entity": tempEntity
+        })
+
+    # 建立執行緒，更新溫度數值
+    def __genRenewTempThread(self):
+        task = threading.Thread(target=self.__renewTemp)
+        task.setDaemon(True)
+        task.start()
+
+    # 每到設定的頻率秒數，就更新溫度
+    def __renewTemp(self):
+        while True:
+            for item in self.__tempLinkList:
+                tempLabel = item["label"]
+                tempEntity = item["entity"]
+                # 讀取溫度
+                temp = tempEntity.getTemperature()
+                # 寫入資料庫
+                tempEntity.writeTemperature(temp)
+                # 呈現畫面
+                tempLabel.config(text=str(int(temp)) + "℃")
+            time.sleep(self.__tempCaptureTime)

@@ -3,15 +3,15 @@ import tkinter as tk
 from utilset.ConfigUtil import ConfigUtil
 from component.mainWindow.BannerPanel import BannerPanel
 from component.mainWindow.TempPanel import TempPanel
-from component.mainWindow.WindowStyle import WinStyle as style
+from component.WebAPI import WebAPI
 
 
 # 主要視窗物件
 class MainWindow():
 
     __configUtil = None
-    __width = style.WinWidth
-    __height = style.WinHeight
+    __width = 480
+    __height = 320
     __window = None
     __canvas = None
 
@@ -35,13 +35,16 @@ class MainWindow():
         self.__window.config(bg="black")
         self.__window.attributes("-toolwindow", True)
         self.__window.protocol("WM_DELETE_WINDOW", False)  # 不允許使用者離開視窗
-        # 生成canvas畫布物件，並佈滿整個window，提供各版面繪製介面
-        #self.__canvas = tk.Canvas(self.__window, bg=style.Color.Black)
-        #self.__canvas.pack(fill=tk.BOTH, expand=1)
         # 載入功能列表
         BannerPanel({
             "mainWindow": self.__window,
             "deviceName": self.__configUtil.DeviceName
         })
         # 載入溫度監視版面
-        # TempPanel(self.__window)
+        TempPanel({
+            "mainWindow": self.__window,
+            "tempCaptureTime": self.__configUtil.TempCaptureTime,
+            "thermometers": self.__configUtil.Thermometer
+        })
+        # 建立WEB微服務
+        WebAPI({'thermometers': self.__configUtil.Thermometer})
