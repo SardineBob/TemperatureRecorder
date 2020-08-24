@@ -13,9 +13,11 @@ class MainWindow():
     __width = 480
     __height = 320
     __window = None
-    __canvas = None
+    __bannerPanel = None
+    __tempViewPanel = None
 
     # 初始化
+
     def __init__(self):
         # 讀取設定檔
         self.__configUtil = ConfigUtil()
@@ -36,15 +38,20 @@ class MainWindow():
         self.__window.attributes("-toolwindow", True)
         self.__window.protocol("WM_DELETE_WINDOW", False)  # 不允許使用者離開視窗
         # 載入功能列表
-        BannerPanel({
+        self.__bannerPanel = BannerPanel({
             "mainWindow": self.__window,
             "deviceName": self.__configUtil.DeviceName
         })
-        # 載入溫度監視版面
-        TempPanel({
+        # 載入溫度檢視版面
+        self.__tempViewPanel = TempPanel({
             "mainWindow": self.__window,
             "tempCaptureTime": self.__configUtil.TempCaptureTime,
             "thermometers": self.__configUtil.Thermometer
+        })
+        # 將載入好的「溫度檢視」面板與「溫度設定」面板，連結到Banner物件，提供設定與存檔按鈕轉換連結對應
+        self.__bannerPanel.setPanelFrame({
+            "tempViewPanel": self.__tempViewPanel,
+            "tempSetupPanel": None
         })
         # 建立WEB微服務
         WebAPI({'thermometers': self.__configUtil.Thermometer})

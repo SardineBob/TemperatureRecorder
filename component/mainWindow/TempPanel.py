@@ -38,7 +38,7 @@ class TempPanel():
         # 生成溫度面板的容器框架
         self.__TempPanel = tk.Frame(self.__mainWindow)
         self.__TempPanel.config(bg="black")
-        self.__TempPanel.pack(fill=tk.BOTH, expand=True)
+        self.show()
         # 根據連接的溫度計，逐一生成溫度計資訊面板
         for tempItem in self.__thermometers:
             self.__genTempInfoPanel(tempItem)
@@ -105,3 +105,11 @@ class TempPanel():
                 # 呈現畫面
                 tempLabel.config(text=str(int(temp)) + "℃")
             time.sleep(self.__tempCaptureTime)
+
+    # 提供外界呼叫，開啟這個panel的方法
+    def show(self):
+        self.__TempPanel.pack(fill=tk.BOTH, expand=True)
+
+    # 提供外界呼叫，隱藏這個panel的方法
+    def hide(self):
+        self.__TempPanel.pack_forget()
