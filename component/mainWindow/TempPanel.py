@@ -6,7 +6,7 @@ import time
 from component.Temperature import Temperature
 
 
-# 功能列表
+# 溫度檢視面版
 class TempPanel():
 
     __mainWindow = None
