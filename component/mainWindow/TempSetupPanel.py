@@ -171,6 +171,7 @@ class TempSetupPanel():
             thermometer["lowlimit"] = lowLimitVal
         # 存檔
         self.__configUtil.save()
+        messagebox.showinfo("info", "存檔成功，請重啟系統，更新設定值。")
         return True
 
     # 提供外界呼叫，開啟這個panel的方法
