@@ -104,6 +104,12 @@ class TempPanel():
                 tempEntity.writeTemperature(temp)
                 # 呈現畫面
                 tempLabel.config(text=str(int(temp)) + "℃")
+                # 檢查溫度是否超出正常範圍，超出範圍則字體紅色並語音警示
+                if tempEntity.checkTemperature(temp) is False:
+                    tempLabel.config(fg="red")
+                else:
+                    tempLabel.config(fg="white")
+
             time.sleep(self.__tempCaptureTime)
 
     # 提供外界呼叫，開啟這個panel的方法

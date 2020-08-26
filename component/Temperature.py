@@ -10,6 +10,8 @@ class Temperature():
     __id = None
     __name = None
     __serial = None
+    __uplimit = None
+    __lowlimit = None
     __devicesFloder = None
     __devicesFile = None
     __temperatureUtil = None
@@ -20,6 +22,8 @@ class Temperature():
         self.__id = para["id"]
         self.__name = para["name"]
         self.__serial = para["serial"]
+        self.__uplimit = para["uplimit"]
+        self.__lowlimit = para["lowlimit"]
         self.__devicesFloder = os.path.join(self.__devicesPath + self.__serial)
         self.__devicesFile = self.__devicesFloder + '/w1_slave'
         self.__temperatureUtil = TemperatureUtil()
@@ -47,7 +51,12 @@ class Temperature():
             'temperature': temperature
         })
 
+    # 檢查目前溫度，是否介於設定正常範圍內，以利出範圍出警報
+    def checkTemperature(self, temperature):
+        return not (temperature < self.__lowlimit or temperature > self.__uplimit)
+
     # 取得該溫控棒設定的代碼
+
     def getID(self):
         return self.__id
 
