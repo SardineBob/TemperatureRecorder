@@ -3,6 +3,7 @@ import tkinter as tk
 from utilset.ConfigUtil import ConfigUtil
 from component.mainWindow.BannerPanel import BannerPanel
 from component.mainWindow.TempPanel import TempPanel
+from component.mainWindow.TempSetupPanel import TempSetupPanel
 from component.WebAPI import WebAPI
 
 
@@ -15,6 +16,7 @@ class MainWindow():
     __window = None
     __bannerPanel = None
     __tempViewPanel = None
+    __tempSetupPanel = None
 
     # 初始化
 
@@ -48,10 +50,15 @@ class MainWindow():
             "tempCaptureTime": self.__configUtil.TempCaptureTime,
             "thermometers": self.__configUtil.Thermometer
         })
+        # 載入溫度設定版面
+        self.__tempSetupPanel = TempSetupPanel({
+            "mainWindow": self.__window,
+            "configUtil": self.__configUtil,
+        })
         # 將載入好的「溫度檢視」面板與「溫度設定」面板，連結到Banner物件，提供設定與存檔按鈕轉換連結對應
         self.__bannerPanel.setPanelFrame({
             "tempViewPanel": self.__tempViewPanel,
-            "tempSetupPanel": None
+            "tempSetupPanel": self.__tempSetupPanel
         })
         # 建立WEB微服務
         WebAPI({'thermometers': self.__configUtil.Thermometer})

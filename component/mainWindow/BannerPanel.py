@@ -116,13 +116,15 @@ class BannerPanel():
         self.__setupButton.pack_forget()  # 關閉設定按鈕
         self.__saveButton.pack(side=tk.RIGHT)  # 開啟存檔按鈕
         self.__tempViewPanel.hide()  # 隱藏溫度檢視面板
-        #self.__tempSetupPanel.show()  # 開啟溫度設定面板
+        self.__tempSetupPanel.show()  # 開啟溫度設定面板
 
     # 存檔按鈕事件
     def __saveEvent(self):
+        if self.__tempSetupPanel.save() is False:
+            return
         self.__saveButton.pack_forget()  # 關閉存檔按鈕
         self.__setupButton.pack(side=tk.RIGHT)  # 開啟設定按鈕
-        #self.__tempSetupPanel.hide()  # 隱藏溫度設定面板
+        self.__tempSetupPanel.hide()  # 隱藏溫度設定面板
         self.__tempViewPanel.show()  # 開啟溫度檢視面板
 
     # 提供外界呼叫，設定連結「溫度檢視」版面與「溫度設定」版面，以利設定按鈕與存檔按鈕切換做動
