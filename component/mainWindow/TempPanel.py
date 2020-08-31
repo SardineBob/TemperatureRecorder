@@ -4,6 +4,7 @@ import tkinter.font as tkFont
 import threading
 import time
 from component.Temperature import Temperature
+from component.Buzzer import Buzzer
 
 
 # 溫度檢視面版
@@ -14,11 +15,14 @@ class TempPanel():
     __tempLinkList = []  # 連結對應的溫度計物件與溫度顯示介面，供執行緒抓取溫度後，呈現於顯示介面
     __tempCaptureTime = None  # 擷取溫度頻率秒數
     __TempPanel = None
+    __buzzer = None # 警報器物件
 
     # 初始化
     def __init__(self, para):
         # 讀取參數
         self.__loadParameter(para)
+        # 生成警報器物件
+        self.__buzzer = Buzzer()
         # 生成Temp Panel
         self.__genTempPanel()
         # 建立執行緒，更新溫度數值
@@ -61,6 +65,11 @@ class TempPanel():
             "panel": tempInfoPanel,
             "tempEntity": tempEntity
         })
+# 測試用要餐刪掉喔
+        def event():
+            self.__buzzer.close()
+        button = tk.Button(tempInfoPanel, text="stop", relief=tk.SOLID, command=event)
+        button.pack(side=tk.LEFT)  # 開啟設定按鈕
 
     # 生成溫度計編號與名稱
     def __genTempTitle(self, para):
@@ -106,9 +115,7 @@ class TempPanel():
                 tempLabel.config(text=str(int(temp)) + "℃")
                 # 檢查溫度是否超出正常範圍，超出範圍則字體紅色並語音警示
                 if tempEntity.checkTemperature(temp) is False:
-                    tempLabel.config(fg="red")
-                else:
-                    tempLabel.config(fg="white")
+                    self.__buzzer.trigger(tempLabel)
 
             time.sleep(self.__tempCaptureTime)
 

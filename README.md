@@ -143,3 +143,8 @@ $ sudo vim /etc/xdg/lxsession/LXDE-pi/autostart
 /home/pi/Project/TemperatureRecorder/dist/TemperatureRecorder
 ```
 - 重開機後，視窗就會出現了
+
+# 安裝播放MP3的套件
+```
+$ pip3 install playsound
+```
