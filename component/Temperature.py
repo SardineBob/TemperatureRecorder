@@ -5,8 +5,8 @@ from utilset.TemperatureUtil import TemperatureUtil
 # 溫度模組，this class for 1-Wire Interface for Raspberry Pi (Ex.DS18B20 Module)
 class Temperature():
 
-    __devicesPath = "D://13.PythonProject/sys/bus/w1/devices/"
-    #__devicesPath = "/sys/bus/w1/devices/"
+    # __devicesPath = "D://13.PythonProject/sys/bus/w1/devices/" # in window
+    __devicesPath = "/sys/bus/w1/devices/"  # in raspberrypi
     __id = None
     __name = None
     __serial = None

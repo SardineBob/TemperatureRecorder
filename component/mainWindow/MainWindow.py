@@ -37,7 +37,8 @@ class MainWindow():
         self.__window.minsize(self.__width, self.__height)
         self.__window.maxsize(self.__width, self.__height)
         self.__window.config(bg="black")
-        self.__window.attributes("-toolwindow", True)
+        # self.__window.attributes("-toolwindow", True) #in window
+        self.__window.attributes("-fullscreen", True)  # in raspberrypi
         self.__window.protocol("WM_DELETE_WINDOW", False)  # 不允許使用者離開視窗
         # 載入功能列表
         self.__bannerPanel = BannerPanel({
