@@ -148,3 +148,8 @@ $ sudo vim /etc/xdg/lxsession/LXDE-pi/autostart
 ```
 $ pip3 install playsound
 ```
+
+# 安裝PIL圖片套件
+```
+$ pip3 install Pillow
+```
