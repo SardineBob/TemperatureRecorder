@@ -56,5 +56,5 @@ class Buzzer():
     # 執行不斷撥放警報語音動作
     def __alertSoundEvent(self):
         while self.__alertSoundActive:
-            print(playsound(self.__alertSoundPath))
+            playsound(self.__alertSoundPath)
             time.sleep(0.5)
