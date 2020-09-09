@@ -5,17 +5,20 @@ import threading
 import time
 from component.Temperature import Temperature
 from component.Buzzer import Buzzer
+from component.SystemIntegrate import SystemIntegrate
 
 
 # 溫度檢視面版
 class TempPanel():
 
     __mainWindow = None
+    __deviceID = None  # 這個設備經由設定賦予他的編號，會與後台整合平台識別有關
     __thermometers = []  # 多筆溫度計物件
     __tempLinkList = []  # 連結對應的溫度計物件與溫度顯示介面，供執行緒抓取溫度後，呈現於顯示介面
     __tempCaptureTime = None  # 擷取溫度頻率秒數
     __TempPanel = None
-    __buzzer = None # 警報器物件
+    __buzzer = None  # 警報器物件
+    __systemIntegrate = None  # 系統整合介接物件
 
     # 初始化
     def __init__(self, para):
@@ -31,11 +34,14 @@ class TempPanel():
     # 讀取參數值方法
     def __loadParameter(self, para):
         self.__mainWindow = para["mainWindow"]
+        self.__deviceID = para["deviceID"]
         self.__tempCaptureTime = para["tempCaptureTime"]
         # 根據溫度計支數設定，逐一實體化溫度物件
         thermometers = para["thermometers"]
         for item in thermometers:
             self.__thermometers.append(Temperature(item))
+        # 實體化系統整合物件
+        self.__systemIntegrate = SystemIntegrate()
 
     # 生成Temp Panel
     def __genTempPanel(self):
@@ -66,6 +72,7 @@ class TempPanel():
             "tempEntity": tempEntity
         })
 # 測試用要餐刪掉喔
+
         def event():
             self.__buzzer.close()
         button = tk.Button(tempInfoPanel, text="stop", relief=tk.SOLID, command=event)
@@ -104,6 +111,7 @@ class TempPanel():
     # 每到設定的頻率秒數，就更新溫度
     def __renewTemp(self):
         while True:
+            tempCollect = []
             for item in self.__tempLinkList:
                 tempLabel = item["label"]
                 tempEntity = item["entity"]
@@ -111,12 +119,20 @@ class TempPanel():
                 temp = tempEntity.getTemperature()
                 # 寫入資料庫
                 tempEntity.writeTemperature(temp)
+                # 收集溫度，準備發布溫度到雲端後台
+                tempCollect.append({
+                    'deviceID': self.__deviceID,
+                    'tempID': tempEntity.getID(),
+                    'temp': temp
+                })
                 # 呈現畫面
                 tempLabel.config(text=str(int(temp)) + "℃")
                 # 檢查溫度是否超出正常範圍，超出範圍則字體紅色並語音警示
                 if tempEntity.checkTemperature(temp) is False:
                     self.__buzzer.trigger(tempLabel)
-
+            # 發布溫度到雲端後台
+            self.__systemIntegrate.postTemp(tempCollect)
+            # 等待設定秒數，再行擷取溫度
             time.sleep(self.__tempCaptureTime)
 
     # 提供外界呼叫，開啟這個panel的方法

@@ -13,6 +13,7 @@ class ConfigUtil():
     DeviceName = None
     TempCaptureTime = None
     Thermometer = None
+    PostURL = None
 
     def __init__(self):
         # 判斷設定檔是否存在，不存在則給予預設參數值
@@ -26,6 +27,7 @@ class ConfigUtil():
         self.DeviceName = json.loads(config["SystemConfig"]["DeviceName"])
         self.TempCaptureTime = json.loads(config["SystemConfig"]["TempCaptureTime"])
         self.Thermometer = json.loads(config["SystemConfig"]["Thermometer"])
+        self.PostURL = json.loads(config["SystemConfig"]["PostURL"])
 
     # 提供外部呼叫設定檔存檔
     def save(self):
@@ -34,6 +36,7 @@ class ConfigUtil():
             "deviceName": self.DeviceName,
             "tempCaptureTime": self.TempCaptureTime,
             "thermometer": self.Thermometer,
+            "postURL": self.PostURL,
         })
 
     # 設定檔存檔
@@ -43,6 +46,7 @@ class ConfigUtil():
         deviceName = para["deviceName"]
         tempCaptureTime = para["tempCaptureTime"]
         thermometer = para["thermometer"]
+        postURL = para["postURL"]
         # 產生設定檔物件
         config = configparser.ConfigParser()
         # 產生系統設定參數
@@ -51,6 +55,7 @@ class ConfigUtil():
             'DeviceName': json.dumps(deviceName, ensure_ascii=False),
             'TempCaptureTime': json.dumps(tempCaptureTime),  # 擷取溫度循環時間，每N秒，讀取溫度，並寫入溫度紀錄
             'Thermometer': json.dumps(thermometer, ensure_ascii=False),  # 溫度計硬體設備序號與名稱(陣列)
+            'PostURL': json.dumps(postURL, ensure_ascii=False),  # 要發布溫度到後台的網址
         }
         # 寫入設定檔
         with open(self.__filePath, 'w', encoding='UTF8') as configFile:
@@ -61,10 +66,11 @@ class ConfigUtil():
         return {
             "deviceID": "0001",
             "deviceName": "南臺灣分店",
-            "tempCaptureTime": 6,
+            "tempCaptureTime": 10,
             "thermometer": [
                 {'id': 'A01', 'name': '左邊冷凍櫃', 'serial': '28-041694bd1cff', 'uplimit': 15, 'lowlimit': -5},
                 {'id': 'A02', 'name': '中間冷凍櫃', 'serial': '28-041694bd1cfg', 'uplimit': 30, 'lowlimit': 27},
                 {'id': 'A03', 'name': '右邊冷凍櫃', 'serial': '28-041694bd1cfh', 'uplimit': 10, 'lowlimit': 9},
-            ]
+            ],
+            "postURL": "http://tsp3039595.tw/RESTAPI/echo.php"
         }

@@ -52,6 +52,7 @@ class MainWindow():
         # 載入溫度檢視版面
         self.__tempViewPanel = TempPanel({
             "mainWindow": self.__window,
+            "deviceID": self.__configUtil.DeviceID,
             "tempCaptureTime": self.__configUtil.TempCaptureTime,
             "thermometers": self.__configUtil.Thermometer
         })
