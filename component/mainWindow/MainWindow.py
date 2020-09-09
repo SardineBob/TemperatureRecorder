@@ -1,5 +1,6 @@
 # coding=UTF-8
 import tkinter as tk
+import platform
 from utilset.ConfigUtil import ConfigUtil
 from component.mainWindow.BannerPanel import BannerPanel
 from component.mainWindow.TempPanel import TempPanel
@@ -37,9 +38,12 @@ class MainWindow():
         self.__window.minsize(self.__width, self.__height)
         self.__window.maxsize(self.__width, self.__height)
         self.__window.config(bg="black")
-        # self.__window.attributes("-toolwindow", True) #in window
-        self.__window.attributes("-fullscreen", True)  # in raspberrypi
         self.__window.protocol("WM_DELETE_WINDOW", False)  # 不允許使用者離開視窗
+        # 判斷作業系統環境，Window則該程式屬性指定為toolwindow，反之指定為fullscreen
+        if platform.system() is "Windows":
+            self.__window.attributes("-toolwindow", True)  # in window
+        else:
+            self.__window.attributes("-fullscreen", True)  # in raspberrypi
         # 載入功能列表
         self.__bannerPanel = BannerPanel({
             "mainWindow": self.__window,
