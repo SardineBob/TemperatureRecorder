@@ -26,5 +26,4 @@ __pycache__
 
 /CameraRecord
 dbfile
-dist
 *.spec
