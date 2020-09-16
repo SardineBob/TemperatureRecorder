@@ -153,3 +153,8 @@ $ pip3 install playsound
 ```
 $ pip3 install Pillow
 ```
+
+# 打包好的執行檔，在樹莓派執行出現 No module named 'PIL._tkinter_finder'的話，pyinstaller打包要避開
+```
+$ pyinstaller -F your-root-python.py --hidden-import='PIL._tkinter_finder'
+```
