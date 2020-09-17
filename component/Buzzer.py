@@ -34,6 +34,9 @@ class Buzzer():
 
     # 關閉警報，字體顏色恢復，停止撥放語音，執行緒停止
     def close(self):
+        # 判斷警報器沒有觸發，則不動作
+        if self.__labelShinyTask is None:
+            return
         # 恢復字體為白色
         for label in self.__labelList:
             label.config(fg="white")
