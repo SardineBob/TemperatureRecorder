@@ -1,0 +1,2 @@
+cd ../
+pyinstaller -F TemperatureRecorder.py --hidden-import='PIL._tkinter_finder'

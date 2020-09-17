@@ -143,6 +143,20 @@ $ sudo vim /etc/xdg/lxsession/LXDE-pi/autostart
 /home/pi/Project/TemperatureRecorder/dist/TemperatureRecorder
 ```
 - 重開機後，視窗就會出現了
+- 以上操作，在程式裡面讀取相對路徑的部分，會失效，因此建議改採寫script的.sh檔去驅動
+```
+$ vim your-script.sh
+```
+- your-script.sh的內容為:
+```
+cd /home/pi/Project/TemperatureRecorder/dist/
+./TemperatureRecorder
+```
+- 最後修改為可執行權限
+```
+$ chmod 755 your-script.sh
+```
+- LXDE-pi裡面的autostart檔案路徑記得改成去執行script的.sh檔
 
 # 安裝播放MP3的套件
 ```
