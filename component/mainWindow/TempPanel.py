@@ -6,6 +6,7 @@ import time
 from component.Temperature import Temperature
 from component.Buzzer import Buzzer
 from component.SystemIntegrate import SystemIntegrate
+from component.DetectStop import DetectStop
 
 
 # 溫度檢視面版
@@ -19,6 +20,7 @@ class TempPanel():
     __TempPanel = None
     __buzzer = None  # 警報器物件
     __systemIntegrate = None  # 系統整合介接物件
+    __detectStop = None  # 偵測GPIO按鈕停止警報物件
 
     # 初始化
     def __init__(self, para):
@@ -26,6 +28,8 @@ class TempPanel():
         self.__loadParameter(para)
         # 生成警報器物件
         self.__buzzer = Buzzer()
+        # 生成偵測停止按鈕物件
+        self.__detectStop = DetectStop(self.__buzzer)
         # 生成Temp Panel
         self.__genTempPanel()
         # 建立執行緒，更新溫度數值
@@ -71,12 +75,6 @@ class TempPanel():
             "panel": tempInfoPanel,
             "tempEntity": tempEntity
         })
-# 測試用要餐刪掉喔
-
-        def event():
-            self.__buzzer.close()
-        button = tk.Button(tempInfoPanel, text="stop", relief=tk.SOLID, command=event)
-        button.pack(side=tk.LEFT)  # 開啟設定按鈕
 
     # 生成溫度計編號與名稱
     def __genTempTitle(self, para):
