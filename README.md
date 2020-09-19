@@ -162,6 +162,10 @@ $ chmod 755 your-script.sh
 ```
 $ pip3 install playsound
 ```
+- 若遇到在樹梅派播放音效出現錯誤 raise ValueError('Namespace %s not available' % namespace)，則安裝python3-gst-1.0
+```
+$ sudo apt-get install python3-gst-1.0
+```
 
 # 安裝PIL圖片套件
 ```
