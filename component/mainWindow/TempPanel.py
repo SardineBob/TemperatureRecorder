@@ -43,7 +43,14 @@ class TempPanel():
         # 根據溫度計支數設定，逐一實體化溫度物件
         thermometers = para["thermometers"]
         for item in thermometers:
-            self.__thermometers.append(Temperature(item))
+            # 判斷實際硬體有連接才運作
+            temperature = Temperature(item)
+            if temperature.isLinkHardware() is True:
+                self.__thermometers.append(temperature)
+        # 判斷都沒有連接溫度計，則提示訊息至少需插入一支溫度計才可運作
+        if len(self.__thermometers) <= 0:
+            tk.messagebox.showerror("偵測不到溫度計", "請至少連接一支溫度計方可運作。")
+            exit()
         # 實體化系統整合物件
         self.__systemIntegrate = SystemIntegrate()
 

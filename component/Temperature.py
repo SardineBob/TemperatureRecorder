@@ -56,10 +56,13 @@ class Temperature():
         return not (temperature < self.__lowlimit or temperature > self.__uplimit)
 
     # 取得該溫控棒設定的代碼
-
     def getID(self):
         return self.__id
 
     # 取得該溫控棒設定的名稱
     def getName(self):
         return self.__name
+
+    # 判斷設定的溫度計，實際硬體是否接上(檢查w1是否有該溫度檔案)
+    def isLinkHardware(self):
+        return os.path.isfile(self.__devicesFile)
