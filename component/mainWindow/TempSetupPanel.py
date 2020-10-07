@@ -134,8 +134,8 @@ class TempSetupPanel():
         # 讀取物件屬性
         label = item["label"]
         limitVal = item["limitVal"]
-        # 判斷最高設定不超過40度
-        if limitVal >= 40:
+        # 判斷最高設定不超過125度
+        if limitVal >= 125:
             return
         # 加1後，更新UI顯示
         limitVal = limitVal + 1
@@ -147,8 +147,8 @@ class TempSetupPanel():
         # 讀取物件屬性
         label = item["label"]
         limitVal = item["limitVal"]
-        # 判斷最低設定不超過-20度
-        if limitVal <= -20:
+        # 判斷最低設定不超過-55度
+        if limitVal <= -55:
             return
         # 加1後，更新UI顯示
         limitVal = limitVal - 1
