@@ -17,16 +17,19 @@ class SystemIntegrate():
 
     # 發布溫度到雲端後台
     def postTemp(self, data):
-        postData = self.__getPostData(data)
-        # 準備要post的json
-        postJson = json.dumps(postData, ensure_ascii=False)
-        # 執行Post
-        headers = {
-            'Content-Type': 'application/json'
-        }
-        req = urllib.request.Request(url=self.__URL, data=postJson.encode("utf-8"), headers=headers, method="POST")
-        with urllib.request.urlopen(req) as res:
-            print(res.read())
+        try:
+            postData = self.__getPostData(data)
+            # 準備要post的json
+            postJson = json.dumps(postData, ensure_ascii=False)
+            # 執行Post
+            headers = {
+                'Content-Type': 'application/json'
+            }
+            req = urllib.request.Request(url=self.__URL, data=postJson.encode("utf-8"), headers=headers, method="POST")
+            with urllib.request.urlopen(req) as res:
+                print(res.read())
+        except:
+            print("網路不通")
 
     # 轉換data為介接協議之字串格式
     def __getPostData(self, data):
