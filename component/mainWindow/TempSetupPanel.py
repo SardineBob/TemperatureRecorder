@@ -1,4 +1,5 @@
 # coding=UTF-8
+import os
 import tkinter as tk
 import tkinter.font as tkFont
 from tkinter import messagebox
@@ -171,7 +172,8 @@ class TempSetupPanel():
             thermometer["lowlimit"] = lowLimitVal
         # 存檔
         self.__configUtil.save()
-        messagebox.showinfo("info", "存檔成功，請重啟系統，更新設定值。")
+        messagebox.showinfo("info", "存檔成功，按下確定後，系統將自動重新啟動，以更新設定值。")
+        os.system("sudo reboot")
         return True
 
     # 提供外界呼叫，開啟這個panel的方法

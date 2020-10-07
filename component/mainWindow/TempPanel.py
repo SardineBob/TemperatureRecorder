@@ -1,4 +1,5 @@
 # coding=UTF-8
+import os
 import tkinter as tk
 import tkinter.font as tkFont
 import threading
@@ -49,7 +50,8 @@ class TempPanel():
                 self.__thermometers.append(temperature)
         # 判斷都沒有連接溫度計，則提示訊息至少需插入一支溫度計才可運作
         if len(self.__thermometers) <= 0:
-            tk.messagebox.showerror("偵測不到溫度計", "請至少連接一支溫度計方可運作。")
+            tk.messagebox.showerror("偵測不到溫度計", "請至少連接一支溫度計，並按下確定，系統將自動重新啟動，以擷取連接的溫度計訊號。")
+            os.system("sudo reboot")
             exit()
         # 實體化系統整合物件
         self.__systemIntegrate = SystemIntegrate()
