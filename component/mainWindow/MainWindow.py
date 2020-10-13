@@ -33,7 +33,7 @@ class MainWindow():
     def __loadWindow(self):
         # 設定主視窗相關的屬性參數
         self.__window = tk.Tk()
-        self.__window.title("溫度監控(ver.0.1.0)-" + self.__configUtil.DeviceName + "(" + self.__configUtil.DeviceID + ")")
+        self.__window.title("溫度監控(ver.1.0.0)-" + self.__configUtil.DeviceName + "(" + self.__configUtil.DeviceID + ")")
         self.__width = self.__window.winfo_screenwidth()
         self.__height = self.__window.winfo_screenheight()
         self.__window.geometry("%dx%d" % (self.__width, self.__height))
