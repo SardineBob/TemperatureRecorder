@@ -36,7 +36,7 @@ class TemperatureUtil():
     # 產生DB檔案
     def __createDB(self):
         command = "CREATE TABLE RecordList(\
-            ID INTEGER NOT NULL,\
+            ID Text NOT NULL,\
             Name Text NOT NULL,\
             RecordTime Text NOT NULL,\
             Temperature REAL NOT NULL,\

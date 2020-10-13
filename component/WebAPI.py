@@ -9,11 +9,13 @@ import json
 class WebAPI():
 
     __port = 9453
-    __temperature = None
+    __thermometers = []
 
     def __init__(self, para):
-        # 取得需使用的參數或物件
-        self.__temperature = para['temperature']
+        # 根據溫度計支數設定，逐一實體化溫度物件
+        thermometers = para["thermometers"]
+        for item in thermometers:
+            self.__thermometers.append(Temperature(item))
         # 建立執行序跑WebAPI服務
         task = threading.Thread(target=self.__start)
         task.setDaemon(True)
@@ -37,7 +39,7 @@ class WebAPI():
     # 取得目前溫度
     def getNowTemperature(self):
         result = []
-        for item in self.__temperature:
+        for item in self.__thermometers:
             result.append({
                 'now': datetime.now().strftime('%Y/%m/%d %H:%M:%S'),
                 'name': item.getName(),

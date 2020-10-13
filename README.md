@@ -1,4 +1,4 @@
-# Version. 0.2.0
+# Version. 1.0.0
 # 在linux下，背景執行指令
 - 在指令的後面加上&的符號，就可以背景執行
 ```
@@ -117,4 +117,62 @@ $ sudo apt-get install python3-rpi.gpio
 # 換了Raspberrypi zero，裝OS Lite，有些python套件要自己裝
 ```
 $ sudo apt-get install python3-tk
+```
+
+# 換3.5吋LCD螢幕(MPI3508)，直接走window的介面
+- 這款MPI3508，透過GPIO針腳與HDMI連接埠，達到觸控螢幕的效果，初次使用前需要執行安裝
+```
+$ sudo rm -rf LCD-show
+$ git clone https://github.com/goodtft/LCD-show.git
+$ chmod -R 755 LCD-show
+$ cd LCD-show/
+$ sudo ./MPI3508-show
+```
+
+# 走window介面，開機時自動開啟溫控的window form介面
+- 將寫好的python tkinter window form 使用pyinstaller編譯成可執行檔案
+- 編輯LXDE-pi裡面的autostart檔案，把執行檔路徑放進去，那因為這個地方全域有效，記得加sudo
+```
+$ sudo vim /etc/xdg/lxsession/LXDE-pi/autostart
+```
+- 接著在最後一行加上編譯好的可執行檔案
+```
+@lxpanel --profile LXDE-pi
+@pcmanfm --desktop --profile LXDE-pi
+@xscreensaver -no-splashy
+/home/pi/Project/TemperatureRecorder/dist/TemperatureRecorder
+```
+- 重開機後，視窗就會出現了
+- 以上操作，在程式裡面讀取相對路徑的部分，會失效，因此建議改採寫script的.sh檔去驅動
+```
+$ vim your-script.sh
+```
+- your-script.sh的內容為:
+```
+cd /home/pi/Project/TemperatureRecorder/dist/
+./TemperatureRecorder
+```
+- 最後修改為可執行權限
+```
+$ chmod 755 your-script.sh
+```
+- LXDE-pi裡面的autostart檔案路徑記得改成去執行script的.sh檔
+
+# 安裝播放MP3的套件
+```
+$ pip3 install playsound
+```
+- 若遇到在樹梅派播放音效出現錯誤 raise ValueError('Namespace %s not available' % namespace)，則安裝python3-gst-1.0
+```
+$ sudo apt-get install python3-gst-1.0
+```
+
+# 安裝PIL圖片套件
+```
+$ pip3 install Pillow
+```
+
+# 打包好的執行檔，在樹莓派執行出現 No module named 'PIL._tkinter_finder'的話，pyinstaller打包要避開
+```
+$ pyinstaller -F your-root-python.py --hidden-import='PIL._tkinter_finder'
 ```

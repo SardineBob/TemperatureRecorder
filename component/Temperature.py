@@ -1,15 +1,17 @@
 import os
+import platform
 from utilset.TemperatureUtil import TemperatureUtil
 
 
 # 溫度模組，this class for 1-Wire Interface for Raspberry Pi (Ex.DS18B20 Module)
 class Temperature():
 
-    #__devicesPath = "D://13.PythonProject/sys/bus/w1/devices/"
-    __devicesPath = "/sys/bus/w1/devices/"
+    __devicesPath = "/sys/bus/w1/devices/" if platform.system() is not "Windows" else "D://13.PythonProject/sys/bus/w1/devices/"
     __id = None
     __name = None
     __serial = None
+    __uplimit = None
+    __lowlimit = None
     __devicesFloder = None
     __devicesFile = None
     __temperatureUtil = None
@@ -20,6 +22,8 @@ class Temperature():
         self.__id = para["id"]
         self.__name = para["name"]
         self.__serial = para["serial"]
+        self.__uplimit = para["uplimit"]
+        self.__lowlimit = para["lowlimit"]
         self.__devicesFloder = os.path.join(self.__devicesPath + self.__serial)
         self.__devicesFile = self.__devicesFloder + '/w1_slave'
         self.__temperatureUtil = TemperatureUtil()
@@ -47,6 +51,18 @@ class Temperature():
             'temperature': temperature
         })
 
+    # 檢查目前溫度，是否介於設定正常範圍內，以利出範圍出警報
+    def checkTemperature(self, temperature):
+        return not (temperature < self.__lowlimit or temperature > self.__uplimit)
+
+    # 取得該溫控棒設定的代碼
+    def getID(self):
+        return self.__id
+
     # 取得該溫控棒設定的名稱
     def getName(self):
         return self.__name
+
+    # 判斷設定的溫度計，實際硬體是否接上(檢查w1是否有該溫度檔案)
+    def isLinkHardware(self):
+        return os.path.isfile(self.__devicesFile)
