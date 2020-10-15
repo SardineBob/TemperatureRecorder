@@ -1,0 +1,69 @@
+#include <stdlib.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
+#define TemperatrueBus 2 // 指定溫度計連接針腳
+#define DeviceID 0 // 指定這張arduino對於樹梅派的裝置代碼
+
+OneWire oneWire(TemperatrueBus); //實體化one-wire介面操作物件
+DallasTemperature sensor(&oneWire); //實體化溫度計操作物件
+DeviceAddress devices[18]; //建立裝載18個裝置資訊的陣列
+int DeviceCount = 0; //Arduino開啟時，抓到的設備數量
+
+//初始化裝置，取得記憶體位置用以識別
+void initDevice();
+//組出json格式，傳送給樹梅派
+void writeJsonData();
+
+void setup() {
+  pinMode(0,INPUT);
+  Serial.begin(9600); //開啟輸出序列埠
+  sensor.begin(); //開啟溫度感測物件
+  initDevice(); //初始化裝置
+}
+
+void loop() {
+  sensor.requestTemperatures(); //觸發要求取得所有溫度感測器的溫度值
+  writeJsonData(); //取得溫度與溫度計序號，並輸出Serial，讓樹梅派接收
+  delay(1000);
+}
+
+//初始化裝置，取得記憶體位置用以識別
+void initDevice(){
+  uint8_t deviceID = 0;
+  uint8_t test = 0;
+  //透過套件，搜尋oneWire介面的設備
+  //若搜尋到，記憶體資訊將放入devices[deviceID]陣列中，且為8位元的資料，所以記憶體位置要抓devices[deviceID][0]~devices[deviceID][7]組起來
+  while(oneWire.search(devices[deviceID])){
+    deviceID++;
+  }
+  //取得設備數量
+  DeviceCount = sensor.getDeviceCount();
+  //回歸搜尋指標到最前頭，以利重新搜尋時使用
+  oneWire.reset_search();
+  return;
+}
+
+//組出json格式，傳送給樹梅派
+void writeJsonData(){
+  Serial.print("[");
+  for(int i=0; i<DeviceCount; i++){
+    Serial.print("{");
+    Serial.print("\"deviceID\":");
+    Serial.print(DeviceCount);
+    Serial.print(", \"tempID\": ");
+    Serial.print(i);
+    Serial.print(", \"tempSerial\": ");
+    Serial.print("\"");
+    for(uint8_t idx=0; idx<8; idx++){
+      Serial.print(devices[i][idx], HEX);
+    }
+    Serial.print("\"");
+    Serial.print(", \"temp\": ");
+    float temp = sensor.getTempC(devices[i]);
+    Serial.print(temp > -127 ? temp : -999);
+    Serial.print("}");
+  }
+  Serial.print("]");
+  Serial.println();
+}
