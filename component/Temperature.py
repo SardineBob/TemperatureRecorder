@@ -1,12 +1,13 @@
 import os
 import platform
 from utilset.TemperatureUtil import TemperatureUtil
+from utilset.ConfigUtil import ConfigUtil
 
 
 # 溫度模組，this class for 1-Wire Interface for Raspberry Pi (Ex.DS18B20 Module)
 class Temperature():
 
-    __devicesPath = "/sys/bus/w1/devices/" if platform.system() is not "Windows" else "D://13.PythonProject/sys/bus/w1/devices/"
+    __devicesPath = None
     __id = None
     __name = None
     __serial = None
@@ -19,6 +20,7 @@ class Temperature():
     # 初始化，主要是定義一些路徑
     def __init__(self, para):
         # 取得設定檔各項參數值
+        self.__devicesPath = ConfigUtil().DeviceRootPath
         self.__id = para["id"]
         self.__name = para["name"]
         self.__serial = para["serial"]
