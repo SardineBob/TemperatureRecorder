@@ -6,7 +6,6 @@ from tkinter import messagebox
 import threading
 import time
 from PIL import Image, ImageTk
-from component.Temperature import Temperature
 
 
 # 溫度檢視面版
