@@ -176,3 +176,7 @@ $ pip3 install Pillow
 ```
 $ pyinstaller -F your-root-python.py --hidden-import='PIL._tkinter_finder'
 ```
+# 安裝讀取序列埠(serial)套件(樹梅派一般已具備)
+```
+$ pip3 install pyserial
+```
