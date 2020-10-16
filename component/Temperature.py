@@ -13,7 +13,7 @@ class Temperature():
     __serial = None
     __uplimit = None
     __lowlimit = None
-    __devicesFloder = None
+    __devicesFolder = None
     __devicesFile = None
     __temperatureUtil = None
 
