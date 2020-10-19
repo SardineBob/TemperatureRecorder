@@ -100,9 +100,12 @@ class BannerPanel():
     # 更新時間方法
     def __renewTime(self):
         while True:
-            now = time.strftime("%Y/%m/%d\n%H:%M:%S", time.localtime())
-            self.__timeLabel.config(text=now)
-            time.sleep(1)
+            try:
+                now = time.strftime("%Y/%m/%d\n%H:%M:%S", time.localtime())
+                self.__timeLabel.config(text=now)
+                time.sleep(1)
+            except:
+                continue
 
     # 離開按鈕事件
     def __quitEvent(self):
