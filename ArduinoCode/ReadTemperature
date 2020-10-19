@@ -9,6 +9,7 @@ OneWire oneWire(TemperatrueBus); //實體化one-wire介面操作物件
 DallasTemperature sensor(&oneWire); //實體化溫度計操作物件
 DeviceAddress devices[18]; //建立裝載18個裝置資訊的陣列
 int DeviceCount = 0; //Arduino開啟時，抓到的設備數量
+int OutputInterval = 0; //透過Serial輸出溫度的頻率(秒)
 
 //初始化裝置，取得記憶體位置用以識別
 void initDevice();
@@ -23,9 +24,22 @@ void setup() {
 }
 
 void loop() {
-  sensor.requestTemperatures(); //觸發要求取得所有溫度感測器的溫度值
-  writeJsonData(); //取得溫度與溫度計序號，並輸出Serial，讓樹梅派接收
-  delay(1000);
+  //輸出溫度頻率要從樹梅派取得，取到輸出頻率秒數再開始運作
+  if (OutputInterval > 0){
+    sensor.requestTemperatures(); //觸發要求取得所有溫度感測器的溫度值
+    writeJsonData(); //取得溫度與溫度計序號，並輸出Serial，讓樹梅派接收
+    delay(OutputInterval);
+  } else{
+    //每0.1秒都抓抓看，樹梅派給輸出頻率了沒
+    String data = "";
+    while(Serial.available()){
+      char C = Serial.read();
+      if (C == '\n') continue;
+      data += C;
+    }
+    OutputInterval = atoi(data.c_str());
+    delay(100);
+  }
 }
 
 //初始化裝置，取得記憶體位置用以識別
@@ -50,7 +64,7 @@ void writeJsonData(){
   for(int i=0; i<DeviceCount; i++){
     Serial.print("{");
     Serial.print("\"deviceID\":");
-    Serial.print(DeviceCount);
+    Serial.print(DeviceID);
     Serial.print(", \"tempID\": ");
     Serial.print(i);
     Serial.print(", \"tempSerial\": ");
