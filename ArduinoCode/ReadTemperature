@@ -37,7 +37,7 @@ void loop() {
       if (C == '\n') continue;
       data += C;
     }
-    OutputInterval = atoi(data.c_str());
+    OutputInterval = atoi(data.c_str()) * 1000;
     delay(100);
   }
 }
