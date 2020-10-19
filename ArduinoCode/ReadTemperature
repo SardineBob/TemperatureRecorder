@@ -62,7 +62,7 @@ void writeJsonData(){
     Serial.print(", \"temp\": ");
     float temp = sensor.getTempC(devices[i]);
     Serial.print(temp > -127 ? temp : -999);
-    Serial.print("}");
+    Serial.print(i==DeviceCount-1 ? "}" : "},");
   }
   Serial.print("]");
   Serial.println();
