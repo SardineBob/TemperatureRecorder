@@ -31,7 +31,7 @@ class ArduinoReader():
     def __task(self):
         while True:
             self.__readData()
-            time.sleep(5)
+            time.sleep(1)
 
     # 初始化溫度文件資料，每次啟動程式將__deviceRootPath資料夾移除
     def __initPath(self):
@@ -80,7 +80,7 @@ class ArduinoReader():
                 # 擷取一次serial所有資料，切割後，逐一轉為json物件，過程中，可能因資料輸出未完成就讀取而截斷資料，這狀況的資料就拋棄，這邊只保留最新一筆完整的溫度資料
                 data = self.__serial.read_all()
                 jsonData = self.__getJsonData(data)
-                time.sleep(0.5)
+                time.sleep(1)
         except:
             messagebox.showerror("序列埠中斷", "序列埠已中斷，請確認USB接頭，按下確定後，系統將自動重新啟動。")
             os.system("sudo reboot")
