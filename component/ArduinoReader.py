@@ -93,6 +93,11 @@ class ArduinoReader():
         jsonData = []
         for item in data.splitlines():
             try:
+                # 偵測如果接收到按下停止警報按鈕，則觸發停止警報程序
+                if item.decode('utf-8') == "StopClick":
+                    self.__buzzer.close()
+                    continue
+                # 資料轉json物件做處理
                 jsonData = json.loads(item)
             except:
                 # 因json字串資料輸出未完成，就被讀取之時間差，這種資料無法轉json物件就拋棄，僅保留完整溫度資料
