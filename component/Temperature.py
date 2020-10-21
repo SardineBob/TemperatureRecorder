@@ -26,8 +26,8 @@ class Temperature():
         self.__serial = para["serial"]
         self.__uplimit = para["uplimit"]
         self.__lowlimit = para["lowlimit"]
-        self.__devicesFloder = os.path.join(self.__devicesPath + self.__serial)
-        self.__devicesFile = self.__devicesFloder + '/w1_slave'
+        self.__devicesFloder = os.path.join(self.__devicesPath, self.__serial)
+        self.__devicesFile = os.path.join(self.__devicesFloder, 'w1_slave')
         self.__temperatureUtil = TemperatureUtil()
 
     # 讀取w1介面寫到溫度的檔案，並回傳溫度數值
