@@ -180,3 +180,16 @@ $ pyinstaller -F your-root-python.py --hidden-import='PIL._tkinter_finder'
 ```
 $ pip3 install pyserial
 ```
+
+# 關閉樹梅派螢幕保護程式，不要讓溫控監視螢幕消失
+- 由於樹梅派OS採用了輕量桌面管理器lightdm，透過他可對xserver桌面進行顯示與溝通的設定，因此需要編輯lightdm.conf
+```
+$ sudo vim /etc/lightdm/lightdm.conf
+```
+- 找到[Seat:*]底下的xserver-command=X，取消註解後，加入-s 0(關閉螢幕保護)以及-dpms(關閉省電管理機制)
+```
+[Seat:*]
+...
+...
+xserver-command=X -s 0 -dpms
+```
