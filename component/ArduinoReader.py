@@ -64,6 +64,7 @@ class ArduinoReader():
                 # 讀到StopClick，表示按下了停止警報按鈕，直接呼叫停止警報程序
                 if data == "StopClick":
                     self.__buzzer.close()
+                    time.sleep(0.1)
                     continue
                 # 更新變數溫度值
                 self.__serialData = data
