@@ -78,5 +78,5 @@ class ConfigUtil():
                 {'id': 'A02', 'name': '中間冷凍櫃', 'serial': '28-041694bd1cfg', 'uplimit': 30, 'lowlimit': 27},
                 {'id': 'A03', 'name': '右邊冷凍櫃', 'serial': '28-041694bd1cfh', 'uplimit': 10, 'lowlimit': 9},
             ],
-            "postURL": "http://tsp3039595.tw/RESTAPI/echo.php"
+            "postURL": "http://59.125.33.102:2028"
         }

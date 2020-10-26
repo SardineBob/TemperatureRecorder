@@ -43,8 +43,9 @@ class SystemIntegrate():
             postStr = "T" + deviceID + tempID + ("+" if temp >= 0 else "") + str(round(temp, 1))
             postStr = postStr + "#" + self.__getMD5(postStr)
             postData.append({
-                "code": postStr
+                "DATA": postStr
             })
+        print(postData)
         return postData
 
     # 取得MD5雜湊
@@ -54,4 +55,4 @@ class SystemIntegrate():
         MD5 = hashlib.md5()
         MD5.update(data)
         code = MD5.hexdigest()
-        return code[0:4]
+        return code[0:6]
