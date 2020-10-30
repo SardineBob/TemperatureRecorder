@@ -7,7 +7,7 @@ import time
 from component.Temperature import Temperature
 from component.Buzzer import Buzzer
 from component.SystemIntegrate import SystemIntegrate
-from component.DetectStop import DetectStop
+from component.ArduinoReader import ArduinoReader
 
 
 # 溫度檢視面版
@@ -21,16 +21,16 @@ class TempPanel():
     __TempPanel = None
     __buzzer = None  # 警報器物件
     __systemIntegrate = None  # 系統整合介接物件
-    __detectStop = None  # 偵測GPIO按鈕停止警報物件
+    __arduinoReader = None # Arduino資料接收器
 
     # 初始化
     def __init__(self, para):
-        # 讀取參數
-        self.__loadParameter(para)
         # 生成警報器物件
         self.__buzzer = Buzzer()
-        # 生成偵測停止按鈕物件
-        self.__detectStop = DetectStop(self.__buzzer)
+        # 生成Arduino資料接收器
+        self.__arduinoReader = ArduinoReader(self.__buzzer)
+        # 讀取參數
+        self.__loadParameter(para)
         # 生成Temp Panel
         self.__genTempPanel()
         # 建立執行緒，更新溫度數值

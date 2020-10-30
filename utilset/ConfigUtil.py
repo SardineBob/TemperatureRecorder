@@ -11,6 +11,7 @@ class ConfigUtil():
     __filePath = 'config.ini'
     DeviceID = None
     DeviceName = None
+    DeviceRootPath = None
     TempCaptureTime = None
     Thermometer = None
     PostURL = None
@@ -25,6 +26,7 @@ class ConfigUtil():
         # 讀取溫控設備設定
         self.DeviceID = json.loads(config["SystemConfig"]["DeviceID"])
         self.DeviceName = json.loads(config["SystemConfig"]["DeviceName"])
+        self.DeviceRootPath = json.loads(config["SystemConfig"]["DeviceRootPath"])
         self.TempCaptureTime = json.loads(config["SystemConfig"]["TempCaptureTime"])
         self.Thermometer = json.loads(config["SystemConfig"]["Thermometer"])
         self.PostURL = json.loads(config["SystemConfig"]["PostURL"])
@@ -34,6 +36,7 @@ class ConfigUtil():
         self.__saveConfig({
             "deviceID": self.DeviceID,
             "deviceName": self.DeviceName,
+            "deviceRootPath": self.DeviceRootPath,
             "tempCaptureTime": self.TempCaptureTime,
             "thermometer": self.Thermometer,
             "postURL": self.PostURL,
@@ -44,6 +47,7 @@ class ConfigUtil():
         # 讀取設定參數
         deviceID = para["deviceID"]
         deviceName = para["deviceName"]
+        deviceRootPath = para["deviceRootPath"]
         tempCaptureTime = para["tempCaptureTime"]
         thermometer = para["thermometer"]
         postURL = para["postURL"]
@@ -53,6 +57,7 @@ class ConfigUtil():
         config['SystemConfig'] = {
             'DeviceID': json.dumps(deviceID, ensure_ascii=False),
             'DeviceName': json.dumps(deviceName, ensure_ascii=False),
+            'DeviceRootPath': json.dumps(deviceRootPath, ensure_ascii=False),
             'TempCaptureTime': json.dumps(tempCaptureTime),  # 擷取溫度循環時間，每N秒，讀取溫度，並寫入溫度紀錄
             'Thermometer': json.dumps(thermometer, ensure_ascii=False),  # 溫度計硬體設備序號與名稱(陣列)
             'PostURL': json.dumps(postURL, ensure_ascii=False),  # 要發布溫度到後台的網址
@@ -66,11 +71,12 @@ class ConfigUtil():
         return {
             "deviceID": "0001",
             "deviceName": "南臺灣分店",
+            "deviceRootPath": "/sys/bus/w1/devices/",
             "tempCaptureTime": 10,
             "thermometer": [
                 {'id': 'A01', 'name': '左邊冷凍櫃', 'serial': '28-041694bd1cff', 'uplimit': 15, 'lowlimit': -5},
                 {'id': 'A02', 'name': '中間冷凍櫃', 'serial': '28-041694bd1cfg', 'uplimit': 30, 'lowlimit': 27},
                 {'id': 'A03', 'name': '右邊冷凍櫃', 'serial': '28-041694bd1cfh', 'uplimit': 10, 'lowlimit': 9},
             ],
-            "postURL": "http://tsp3039595.tw/RESTAPI/echo.php"
+            "postURL": "http://59.125.33.102:2028"
         }

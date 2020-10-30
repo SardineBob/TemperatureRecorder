@@ -1,4 +1,4 @@
-# Version. 1.0.0
+# Version. 2.0.0
 # 在linux下，背景執行指令
 - 在指令的後面加上&的符號，就可以背景執行
 ```
@@ -175,4 +175,21 @@ $ pip3 install Pillow
 # 打包好的執行檔，在樹莓派執行出現 No module named 'PIL._tkinter_finder'的話，pyinstaller打包要避開
 ```
 $ pyinstaller -F your-root-python.py --hidden-import='PIL._tkinter_finder'
+```
+# 安裝讀取序列埠(serial)套件(樹梅派一般已具備)
+```
+$ pip3 install pyserial
+```
+
+# 關閉樹梅派螢幕保護程式，不要讓溫控監視螢幕消失
+- 由於樹梅派OS採用了輕量桌面管理器lightdm，透過他可對xserver桌面進行顯示與溝通的設定，因此需要編輯lightdm.conf
+```
+$ sudo vim /etc/lightdm/lightdm.conf
+```
+- 找到[Seat:*]底下的xserver-command=X，取消註解後，加入-s 0(關閉螢幕保護)以及-dpms(關閉省電管理機制)
+```
+[Seat:*]
+...
+...
+xserver-command=X -s 0 -dpms
 ```
