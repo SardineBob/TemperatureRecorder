@@ -48,7 +48,8 @@ class TempSetupPanel():
         self.__genTempTitle({
             "panel": tempSetupPanel,
             "tempID": tempEntity["id"],
-            "tempName": tempEntity["name"]
+            "tempName": tempEntity["name"],
+            "tempSerial": tempEntity["serial"],
         })
         # 生成溫度上限設定版面
         upLimitItem = self.__genTemplimitPanel({
@@ -74,9 +75,11 @@ class TempSetupPanel():
         panel = para["panel"]
         tempID = para["tempID"]
         tempName = para["tempName"]
+        tempSerial = para["tempSerial"]
         # 生成溫度計標題
         tempTitle = tk.Label(panel)
-        tempTitle.config(text=str(tempID) + "\n" + tempName, fg="white", bg="black", font=("NotoSansTC-Medium", 14))
+        tempTitle.config(text=str(tempID) + "\n" + tempSerial + "\n" + tempName)
+        tempTitle.config(fg="white", bg="black", font=("NotoSansTC-Medium", 14))
         tempTitle.pack(fill=tk.BOTH, side=tk.TOP)
 
     # 生成溫度上限/下限版面

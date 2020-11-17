@@ -21,14 +21,14 @@ class TempPanel():
     __TempPanel = None
     __buzzer = None  # 警報器物件
     __systemIntegrate = None  # 系統整合介接物件
-    __arduinoReader = None # Arduino資料接收器
+    __arduinoReader = None  # Arduino資料接收器
 
     # 初始化
     def __init__(self, para):
         # 生成警報器物件
         self.__buzzer = Buzzer()
         # 生成Arduino資料接收器
-        self.__arduinoReader = ArduinoReader(self.__buzzer)
+        #self.__arduinoReader = ArduinoReader(self.__buzzer)
         # 讀取參數
         self.__loadParameter(para)
         # 生成Temp Panel
@@ -78,6 +78,7 @@ class TempPanel():
             "panel": tempInfoPanel,
             "tempID": tempEntity.getID(),
             "tempName": tempEntity.getName(),
+            "tempSerial": tempEntity.getSerial(),
         })
         # 生成溫度資訊
         self.__genTempLabel({
@@ -90,9 +91,11 @@ class TempPanel():
         panel = para["panel"]
         tempID = para["tempID"]
         tempName = para["tempName"]
+        tempSerial = para["tempSerial"]
         # 生成溫度計標題
         tempTitle = tk.Label(panel)
-        tempTitle.config(text=str(tempID) + "\n" + tempName, fg="white", bg="black", font=("NotoSansTC-Medium", 18))
+        tempTitle.config(text=str(tempID) + "\n" + tempSerial + "\n" + tempName)
+        tempTitle.config(fg="white", bg="black", font=("NotoSansTC-Medium", 16))
         tempTitle.pack(fill=tk.BOTH, side=tk.TOP)
 
     # 生成溫度資訊
@@ -133,7 +136,7 @@ class TempPanel():
                     'temp': temp
                 })
                 # 呈現畫面
-                tempLabel.config(text=str(int(temp)) + "℃")
+                tempLabel.config(text=str(round(temp, 1)) + "℃")
                 # 檢查溫度是否超出正常範圍，超出範圍則字體紅色並語音警示
                 if tempEntity.checkTemperature(temp) is False:
                     self.__buzzer.trigger(tempLabel)

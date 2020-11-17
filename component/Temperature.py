@@ -65,6 +65,10 @@ class Temperature():
     def getName(self):
         return self.__name
 
+    # 取得該溫控棒的唯一識別序號
+    def getSerial(self):
+        return self.__serial
+
     # 判斷設定的溫度計，實際硬體是否接上(檢查w1是否有該溫度檔案)
     def isLinkHardware(self):
         return os.path.isfile(self.__devicesFile)
