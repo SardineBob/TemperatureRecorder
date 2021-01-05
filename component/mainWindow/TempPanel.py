@@ -118,8 +118,9 @@ class TempPanel():
         task.setDaemon(True)
         task.start()
 
-    # 每到設定的頻率秒數，就更新溫度
+    # 每秒更新螢幕上的溫度，累積到設定秒數，才將溫度上傳整合平台
     def __renewTemp(self):
+        postTempCount = 0 # 累積要上傳平台的秒數
         while True:
             tempCollect = []
             for item in self.__tempLinkList:
@@ -131,21 +132,26 @@ class TempPanel():
                 tempEntity.writeTemperature(temp)
                 # 收集溫度，準備發布溫度到雲端後台
                 # 若收到溫度-999，表示接收不到溫度計數值，這邊根據需求，就不上傳平台
-                if temp > -999 :
-                    tempCollect.append({
-                        'deviceID': self.__deviceID,
-                        'tempID': tempEntity.getID(),
-                        'temp': temp
-                    })
+                if postTempCount >= self.__tempCaptureTime:
+                    if temp > -999 :
+                        tempCollect.append({
+                            'deviceID': self.__deviceID,
+                            'tempID': tempEntity.getID(),
+                            'temp': temp
+                        })
                 # 呈現畫面
                 tempLabel.config(text=str(round(temp, 1)) + "℃")
                 # 檢查溫度是否超出正常範圍，超出範圍則字體紅色並語音警示
                 if tempEntity.checkTemperature(temp) is False:
                     self.__buzzer.trigger(tempLabel)
             # 發布溫度到雲端後台
-            self.__systemIntegrate.postTemp(tempCollect)
-            # 等待設定秒數，再行擷取溫度
-            time.sleep(self.__tempCaptureTime)
+            if postTempCount >= self.__tempCaptureTime:
+                self.__systemIntegrate.postTemp(tempCollect)
+                postTempCount = 0
+            # 累計秒數，累積到設定秒數即上傳平台
+            postTempCount = postTempCount+1
+            # 每秒擷取溫度
+            time.sleep(1)
 
     # 提供外界呼叫，開啟這個panel的方法
     def show(self):
