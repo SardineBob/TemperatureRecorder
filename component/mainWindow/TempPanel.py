@@ -130,11 +130,13 @@ class TempPanel():
                 # 寫入資料庫
                 tempEntity.writeTemperature(temp)
                 # 收集溫度，準備發布溫度到雲端後台
-                tempCollect.append({
-                    'deviceID': self.__deviceID,
-                    'tempID': tempEntity.getID(),
-                    'temp': temp
-                })
+                # 若收到溫度-999，表示接收不到溫度計數值，這邊根據需求，就不上傳平台
+                if temp > -999 :
+                    tempCollect.append({
+                        'deviceID': self.__deviceID,
+                        'tempID': tempEntity.getID(),
+                        'temp': temp
+                    })
                 # 呈現畫面
                 tempLabel.config(text=str(round(temp, 1)) + "℃")
                 # 檢查溫度是否超出正常範圍，超出範圍則字體紅色並語音警示
