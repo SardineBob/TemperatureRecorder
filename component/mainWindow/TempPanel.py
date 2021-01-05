@@ -28,7 +28,7 @@ class TempPanel():
         # 生成警報器物件
         self.__buzzer = Buzzer()
         # 生成Arduino資料接收器
-        #self.__arduinoReader = ArduinoReader(self.__buzzer)
+        self.__arduinoReader = ArduinoReader(self.__buzzer)
         # 讀取參數
         self.__loadParameter(para)
         # 生成Temp Panel

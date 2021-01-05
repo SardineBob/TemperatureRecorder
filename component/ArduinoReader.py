@@ -41,8 +41,8 @@ class ArduinoReader():
     def __initSerial(self):
         # 準備讀取arduino的序列埠
         try:
-            self.__serial = serial.Serial("/dev/ttyACM0", 9600)  # 建立serial序列埠連線，序列埠名稱固定抓/dev/tty*，限制只能接一組arduino
-            # self.__serial = serial.Serial("COM3", 9600)  # 建立serial序列埠連線，序列埠名稱固定抓/dev/tty*，限制只能接一組arduino
+            # self.__serial = serial.Serial("/dev/ttyACM0", 9600)  # 建立serial序列埠連線，序列埠名稱固定抓/dev/tty*，限制只能接一組arduino
+            self.__serial = serial.Serial("COM3", 9600)  # 建立serial序列埠連線，序列埠名稱固定抓/dev/tty*，限制只能接一組arduino
         except:
             messagebox.showerror("未連接溫度接收器", "未連接溫度接收序列埠，請確認是否接上，按下確定後，系統將自動重新啟動。")
             os.system("sudo reboot")
@@ -64,6 +64,17 @@ class ArduinoReader():
                 # 讀到StopClick，表示按下了停止警報按鈕，直接呼叫停止警報程序
                 if data == "StopClick":
                     self.__buzzer.close()
+                    time.sleep(0.1)
+                    continue
+                # 讀到TrueOff，表示關閉警報，呼叫警報器關閉
+                if data == "TrueOff":
+                    self.__buzzer.switchOnOff(False)
+                    self.__buzzer.close()
+                    time.sleep(0.1)
+                    continue
+                # 讀到TrueOn，表示開啟警報，呼叫警報器開啟
+                if data == "TrueOn":
+                    self.__buzzer.switchOnOff(True)
                     time.sleep(0.1)
                     continue
                 # 更新變數溫度值

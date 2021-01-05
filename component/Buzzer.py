@@ -12,6 +12,7 @@ class Buzzer():
     __alertSoundTask = None  # 警報進行中的執行緒，負責不斷撥放警報語音
     __alertSoundActive = False
     __alertSoundPath = "./resource/alert.mp3"
+    __alertOn = False # 是否啟動警報機制，預設關閉
 
     # 初始化，建立字體閃爍與警報語音撥放執行緒
     def __init__(self):
@@ -28,6 +29,9 @@ class Buzzer():
 
     # 觸發警報，除了將傳進來的溫度Label物件字體變為紅白閃爍，同時也不斷撥放警報語音
     def trigger(self, label):
+        # 判斷如果關閉警報，則不觸發
+        if self.__alertOn is False:
+            return
         # 判斷該Label物件是否存在，存在就不需要append到需處理清單
         if label in self.__labelList:
             return
@@ -65,3 +69,7 @@ class Buzzer():
             if self.__alertSoundActive is True:
                 playsound(self.__alertSoundPath)
             time.sleep(0.5)
+    
+    # 給予外界判斷，是否關閉該警報器
+    def switchOnOff(self, switch):
+        self.__alertOn = switch
