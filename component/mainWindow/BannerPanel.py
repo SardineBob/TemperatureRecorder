@@ -50,7 +50,7 @@ class BannerPanel():
             "IconPath": "./resource/quit.png",
             "event": self.__quitEvent
         })
-        self.__quitButton.pack(side=tk.RIGHT)
+        #self.__quitButton.pack(side=tk.RIGHT)
         # 生成設定按鈕
         self.__setupButton = self.__genButton({
             "IconPath": "./resource/setup.png",
