@@ -3,8 +3,9 @@
 #include <DallasTemperature.h>
 
 #define TemperatrueBus 2 // 指定溫度計連接針腳
-#define StopBus 3 // 指定點擊停止警報開關連接針腳
-#define OffOnBus 4 // 指定暫時停止警報開關連接針腳
+//#define StopBus 3 // 指定點擊停止警報開關連接針腳
+#define OffOnBus 3 // 指定暫時停止警報開關連接針腳
+#define PluginAlertBus 4 // 指定外掛警報器訊號連接針腳，目前用於保全主機第七迴路
 #define DeviceID 0 // 指定這張arduino對於樹梅派的裝置代碼
 
 OneWire oneWire(TemperatrueBus); //實體化one-wire介面操作物件
@@ -12,6 +13,7 @@ DallasTemperature sensor(&oneWire); //實體化溫度計操作物件
 DeviceAddress devices[18]; //建立裝載18個裝置資訊的陣列
 int DeviceCount = 0; //Arduino開啟時，抓到的設備數量
 int CaptureTempTiming = 0; //每0.1秒巡迴抓停止按鈕是否按下，這個計時器在計數到10時，剛好過了1秒，觸發一次輸出溫度值的動作
+bool initSwitch = false; //是否初始化開關狀態，先行同步硬體開關與軟體數值
 bool TrunOff = false; //目前是否暫停警報之開關的狀態
 
 //初始化裝置，取得記憶體位置用以識別
@@ -23,29 +25,43 @@ void setup() {
   Serial.begin(9600); //開啟輸出序列埠
   sensor.begin(); //開啟溫度感測物件
   initDevice(); //初始化裝置
-  pinMode(StopBus, INPUT); //初始化停止警報開關，宣告針腳為輸入訊號
+  //pinMode(StopBus, INPUT); //初始化停止警報開關，宣告針腳為輸入訊號
   pinMode(OffOnBus,INPUT); //初始化暫停警報開關，宣告針腳為輸入訊號
+  pinMode(PluginAlertBus,OUTPUT); //初始化外掛警報訊號，宣告針腳為輸出訊號
+  digitalWrite(PluginAlertBus, LOW); //初始化外掛警報訊號是關閉的
 }
 
 void loop() {
+  //檢查一下，是否有來自溫控平台的警報訊號
+  if (Serial.available() > 0){
+    String AlertMsg = Serial.readString();
+    if (AlertMsg.indexOf("AlertTrigger") >= 0){
+      digitalWrite(PluginAlertBus, HIGH);
+      //Serial.println('H');
+    } else {
+      digitalWrite(PluginAlertBus, LOW);
+      //Serial.println('L');
+    }    
+  }
   //擷取目前開關狀態
   bool isOff = digitalRead(OffOnBus) == 0 ? true : false;
   if (isOff){
-    if (TrunOff == false){
+    if (TrunOff == false || initSwitch == false){
       TrunOff = isOff;
       Serial.println("TrueOff");
     }
   } else {
-    if (TrunOff == true){
+    if (TrunOff == true || initSwitch == false){
       TrunOff = isOff;
       Serial.println("TrueOn");
     }
   }
+  initSwitch = true;
   //抓一次停止按鈕是否被按下
-  bool isClick = digitalRead(StopBus) == 1 ? true : false;
-  if (isClick){
-    Serial.println("StopClick");
-  }
+  //bool isClick = digitalRead(StopBus) == 1 ? true : false;
+  //if (isClick){
+  //  Serial.println("StopClick");
+  //}
   //觸發輸出溫度值
   if (CaptureTempTiming >= 10){
     sensor.requestTemperatures(); //觸發要求取得所有溫度感測器的溫度值

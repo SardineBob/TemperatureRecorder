@@ -142,8 +142,11 @@ class TempPanel():
                 # 呈現畫面
                 tempLabel.config(text=str(round(temp, 1)) + "℃")
                 # 檢查溫度是否超出正常範圍，超出範圍則字體紅色並語音警示
-                if tempEntity.checkTemperature(temp) is False:
+                isCheckOK = tempEntity.checkTemperature(temp)
+                if isCheckOK is False:
                     self.__buzzer.trigger(tempLabel)
+                # 若溫度超過，通知Serial發出警報，直到溫度恢復才關閉
+                self.__arduinoReader.AlertToSerial(not isCheckOK)
             # 發布溫度到雲端後台
             if postTempCount >= self.__tempCaptureTime:
                 self.__systemIntegrate.postTemp(tempCollect)
