@@ -57,6 +57,12 @@ class TempSetupPanel():
             "limitVal": tempEntity["uplimit"],
             "fontColor": "red"
         })
+        # 生成初始溫度設定版面
+        initTempItem = self.__genTemplimitPanel({
+            "panel": tempSetupPanel,
+            "limitVal": tempEntity["initTemp"],
+            "fontColor": "white"
+        })
         # 生成溫度下限設定版面
         lowLimitItem = self.__genTemplimitPanel({
             "panel": tempSetupPanel,
@@ -67,6 +73,7 @@ class TempSetupPanel():
         self.__tempSetupList.append({
             "Thermometer": tempEntity,
             "upLimitItem": upLimitItem,
+            "initTempItem": initTempItem,
             "lowLimitItem": lowLimitItem
         })
 
@@ -164,6 +171,7 @@ class TempSetupPanel():
         for item in self.__tempSetupList:
             thermometer = item["Thermometer"]
             upLimitVal = item["upLimitItem"]["limitVal"]
+            initTempVal = item["initTempItem"]["limitVal"]
             lowLimitVal = item["lowLimitItem"]["limitVal"]
             # 檢查上限不可以低於下限
             if lowLimitVal > upLimitVal:
@@ -171,6 +179,7 @@ class TempSetupPanel():
                 return False
             # 更新設定值至設定檔
             thermometer["uplimit"] = upLimitVal
+            thermometer["initTemp"] = initTempVal
             thermometer["lowlimit"] = lowLimitVal
         # 存檔
         self.__configUtil.save()
