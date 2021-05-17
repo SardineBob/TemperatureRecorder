@@ -16,8 +16,9 @@ class ArduinoReader():
     __deviceRootPath = None
     __buzzer = None
     __serial = None
-    __serialData = None  # 來自arsuino serial溫度資料，每次讀一行，並始終覆蓋至最新
+    __serialData = None  # 來自arduino serial溫度資料，每次讀一行，並始終覆蓋至最新
     __initSuccess = False
+    __serialAlert = False  # 送往serial警報訊號，用以通知arduino發送電子訊號給予外掛警報器
 
     # 初始化，建立執行緒，每秒持續接收來自arduino serial的溫度計資料
     def __init__(self, buzzer):
@@ -66,6 +67,17 @@ class ArduinoReader():
                     self.__buzzer.close()
                     time.sleep(0.1)
                     continue
+                # 讀到TrueOff，表示關閉警報，呼叫警報器關閉
+                if data == "TrueOff":
+                    self.__buzzer.switchOnOff(False)
+                    self.__buzzer.close()
+                    time.sleep(0.1)
+                    continue
+                # 讀到TrueOn，表示開啟警報，呼叫警報器開啟
+                if data == "TrueOn":
+                    self.__buzzer.switchOnOff(True)
+                    time.sleep(0.1)
+                    continue
                 # 更新變數溫度值
                 self.__serialData = data
                 time.sleep(0.1)
@@ -107,3 +119,11 @@ class ArduinoReader():
                 self.__initSuccess = True
             # 每秒執行一次
             time.sleep(1)
+
+    # 根據外界判定，往序列埠發送警報訊號，使arduino能發送電子給外掛警報器(ex.保全主機第七迴路)
+    def AlertToSerial(self, isAlert):
+        if isAlert is True and self.__serialAlert is False:
+            self.__serial.write(b'AlertTrigger')
+        if isAlert is False and self.__serialAlert is True:
+            self.__serial.write(b'AlertClose')
+        self.__serialAlert = isAlert

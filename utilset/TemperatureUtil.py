@@ -51,7 +51,7 @@ class TemperatureUtil():
         id = para['id']
         name = para['name']
         temperature = para['temperature']
-        now = datetime.now().strftime('%Y/%m/%d %H:%M:%S')
+        now = datetime.now().strftime('%Y/%m/%d %H:%M:%S.%f')
         # insert 指令
         command = " INSERT INTO RecordList VALUES (:id, :name, :recordTime, :temperature) "
         parameter = {

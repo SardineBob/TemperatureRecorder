@@ -21,7 +21,7 @@ class TempPanel():
     __TempPanel = None
     __buzzer = None  # 警報器物件
     __systemIntegrate = None  # 系統整合介接物件
-    __arduinoReader = None # Arduino資料接收器
+    __arduinoReader = None  # Arduino資料接收器
 
     # 初始化
     def __init__(self, para):
@@ -78,6 +78,7 @@ class TempPanel():
             "panel": tempInfoPanel,
             "tempID": tempEntity.getID(),
             "tempName": tempEntity.getName(),
+            "tempSerial": tempEntity.getSerial(),
         })
         # 生成溫度資訊
         self.__genTempLabel({
@@ -90,9 +91,11 @@ class TempPanel():
         panel = para["panel"]
         tempID = para["tempID"]
         tempName = para["tempName"]
+        tempSerial = para["tempSerial"]
         # 生成溫度計標題
         tempTitle = tk.Label(panel)
-        tempTitle.config(text=str(tempID) + "\n" + tempName, fg="white", bg="black", font=("NotoSansTC-Medium", 18))
+        tempTitle.config(text=str(tempID) + "\n" + tempSerial + "\n" + tempName)
+        tempTitle.config(fg="white", bg="black", font=("NotoSansTC-Medium", 16))
         tempTitle.pack(fill=tk.BOTH, side=tk.TOP)
 
     # 生成溫度資訊
@@ -115,8 +118,10 @@ class TempPanel():
         task.setDaemon(True)
         task.start()
 
-    # 每到設定的頻率秒數，就更新溫度
+    # 每秒更新螢幕上的溫度，累積到設定秒數，才將溫度上傳整合平台
     def __renewTemp(self):
+        postTempCount = 0  # 累積要上傳平台的秒數
+        isAllCheckOK = True  # 所有溫度計溫度是否均正常，只要一支不正常，則發送警報訊息給外掛警報器(保全器材第七迴路)
         while True:
             tempCollect = []
             for item in self.__tempLinkList:
@@ -124,23 +129,37 @@ class TempPanel():
                 tempEntity = item["entity"]
                 # 讀取溫度
                 temp = tempEntity.getTemperature()
+                # 把真實擷取到的溫度做加工，採用初始溫度增減每次的差距
+                temp = tempEntity.reprocessTemp(temp)
                 # 寫入資料庫
                 tempEntity.writeTemperature(temp)
                 # 收集溫度，準備發布溫度到雲端後台
-                tempCollect.append({
-                    'deviceID': self.__deviceID,
-                    'tempID': tempEntity.getID(),
-                    'temp': temp
-                })
+                # 若收到溫度-999，表示接收不到溫度計數值，這邊根據需求，就不上傳平台
+                if postTempCount >= self.__tempCaptureTime:
+                    if temp > -999:
+                        tempCollect.append({
+                            'deviceID': self.__deviceID,
+                            'tempID': tempEntity.getID(),
+                            'temp': temp
+                        })
                 # 呈現畫面
-                tempLabel.config(text=str(int(temp)) + "℃")
+                tempLabel.config(text=str(round(temp, 1)) + "℃")
                 # 檢查溫度是否超出正常範圍，超出範圍則字體紅色並語音警示
-                if tempEntity.checkTemperature(temp) is False:
+                isCheckOK = tempEntity.checkTemperature(temp)
+                if isCheckOK is False:
                     self.__buzzer.trigger(tempLabel)
+                isAllCheckOK = isAllCheckOK and isCheckOK
+            # 若溫度超過，通知Serial發出警報，直到溫度恢復才關閉
+            self.__arduinoReader.AlertToSerial(not isAllCheckOK)
+            isAllCheckOK = True  # 恢復預設值，下次AND邏輯閘才會是我要抓出的某一筆超過就警報
             # 發布溫度到雲端後台
-            self.__systemIntegrate.postTemp(tempCollect)
-            # 等待設定秒數，再行擷取溫度
-            time.sleep(self.__tempCaptureTime)
+            if postTempCount >= self.__tempCaptureTime:
+                self.__systemIntegrate.postTemp(tempCollect)
+                postTempCount = 0
+            # 累計秒數，累積到設定秒數即上傳平台
+            postTempCount = postTempCount+1
+            # 每秒擷取溫度
+            time.sleep(1)
 
     # 提供外界呼叫，開啟這個panel的方法
     def show(self):

@@ -1,4 +1,4 @@
-# Version. 2.0.0
+# Version. 3.0.0
 # 在linux下，背景執行指令
 - 在指令的後面加上&的符號，就可以背景執行
 ```
@@ -157,6 +157,10 @@ cd /home/pi/Project/TemperatureRecorder/dist/
 $ chmod 755 your-script.sh
 ```
 - LXDE-pi裡面的autostart檔案路徑記得改成去執行script的.sh檔
+- 如果使用lxsession的autostart啟動程式，可以透過以下指令去查看run.log
+```
+$ cat ~/cache/lxsession/LXDE-pi/run.log
+```
 
 # 安裝播放MP3的套件
 ```

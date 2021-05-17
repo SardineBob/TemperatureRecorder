@@ -69,14 +69,14 @@ class ConfigUtil():
     # 初始化設定檔
     def __initConfig(self):
         return {
-            "deviceID": "0001",
-            "deviceName": "南臺灣分店",
+            "deviceID": "0000",
+            "deviceName": "星堡保全",
             "deviceRootPath": "/sys/bus/w1/devices/",
-            "tempCaptureTime": 10,
+            "tempCaptureTime": 60,
             "thermometer": [
-                {'id': 'A01', 'name': '左邊冷凍櫃', 'serial': '28-041694bd1cff', 'uplimit': 15, 'lowlimit': -5},
-                {'id': 'A02', 'name': '中間冷凍櫃', 'serial': '28-041694bd1cfg', 'uplimit': 30, 'lowlimit': 27},
-                {'id': 'A03', 'name': '右邊冷凍櫃', 'serial': '28-041694bd1cfh', 'uplimit': 10, 'lowlimit': 9},
+                {'id': 'A01', 'name': '左邊冷凍櫃', 'serial': '28531F7D613CED', 'initTemp': 20, 'uplimit': 25, 'lowlimit': -10},
+                {'id': 'A02', 'name': '中間冷凍櫃', 'serial': '28CEBD7D613CA6', 'initTemp': 10,  'uplimit': 15, 'lowlimit': 5},
+                {'id': 'A03', 'name': '右邊冷凍櫃', 'serial': '28177A7D613C87', 'initTemp': 60,  'uplimit': 70, 'lowlimit': 50},
             ],
             "postURL": "http://59.125.33.102:2028"
         }
