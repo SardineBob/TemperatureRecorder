@@ -120,8 +120,8 @@ class TempPanel():
 
     # 每秒更新螢幕上的溫度，累積到設定秒數，才將溫度上傳整合平台
     def __renewTemp(self):
-        postTempCount = 0 # 累積要上傳平台的秒數
-        isAllCheckOK = True # 所有溫度計溫度是否均正常，只要一支不正常，則發送警報訊息給外掛警報器(保全器材第七迴路)
+        postTempCount = 0  # 累積要上傳平台的秒數
+        isAllCheckOK = True  # 所有溫度計溫度是否均正常，只要一支不正常，則發送警報訊息給外掛警報器(保全器材第七迴路)
         while True:
             tempCollect = []
             for item in self.__tempLinkList:
@@ -129,12 +129,14 @@ class TempPanel():
                 tempEntity = item["entity"]
                 # 讀取溫度
                 temp = tempEntity.getTemperature()
+                # 把真實擷取到的溫度做加工，採用初始溫度增減每次的差距
+                temp = tempEntity.reprocessTemp(temp)
                 # 寫入資料庫
                 tempEntity.writeTemperature(temp)
                 # 收集溫度，準備發布溫度到雲端後台
                 # 若收到溫度-999，表示接收不到溫度計數值，這邊根據需求，就不上傳平台
                 if postTempCount >= self.__tempCaptureTime:
-                    if temp > -999 :
+                    if temp > -999:
                         tempCollect.append({
                             'deviceID': self.__deviceID,
                             'tempID': tempEntity.getID(),
@@ -149,7 +151,7 @@ class TempPanel():
                 isAllCheckOK = isAllCheckOK and isCheckOK
             # 若溫度超過，通知Serial發出警報，直到溫度恢復才關閉
             self.__arduinoReader.AlertToSerial(not isAllCheckOK)
-            isAllCheckOK = True # 恢復預設值，下次AND邏輯閘才會是我要抓出的某一筆超過就警報
+            isAllCheckOK = True  # 恢復預設值，下次AND邏輯閘才會是我要抓出的某一筆超過就警報
             # 發布溫度到雲端後台
             if postTempCount >= self.__tempCaptureTime:
                 self.__systemIntegrate.postTemp(tempCollect)
