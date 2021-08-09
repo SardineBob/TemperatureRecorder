@@ -18,6 +18,7 @@ class Temperature():
     __devicesFile = None
     __temperatureUtil = None
     __lastTemp = None
+    __offlineCount = 0 # 離線倒數，連續達五分鐘發出警報(60*5)
 
     # 初始化，主要是定義一些路徑
     def __init__(self, para):
@@ -59,6 +60,9 @@ class Temperature():
     # 將真實擷取到的溫度，與前次溫度比較計算差值，再增減初始設定溫度
     # 這是為了解決長距離需求，因電阻值需求不同造成溫度值不準確的問題
     def reprocessTemp(self, curTemp):
+        # 收到-999溫度表示溫度計離線了，這邊不做處理直接回傳
+        if curTemp <= -999:
+            return curTemp
         # this is first time
         if self.__lastTemp is None:
             self.__lastTemp = curTemp
@@ -71,6 +75,17 @@ class Temperature():
 
     # 檢查目前溫度，是否介於設定正常範圍內，以利出範圍出警報
     def checkTemperature(self, temperature):
+        # 連續收到離線溫度-999達五分鐘，才發出警報
+        if temperature <= -999:
+            self.__offlineCount = self.__offlineCount + 1
+            return True
+        else:
+            self.__offlineCount = 0
+        # 離線倒數超過五分鐘，發出警報
+        if self.__offlineCount >= 300:
+            self.__offlineCount = 0
+            return False;
+
         return not (temperature < self.__lowlimit or temperature > self.__uplimit)
 
     # 取得該溫控棒設定的代碼
